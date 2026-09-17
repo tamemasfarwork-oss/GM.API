@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="GM.API/GM.API.csproj" />
+  <Project Path="GM.BLL/GM.BLL.csproj" />
+  <Project Path="GM.DAL/GM.DAL.csproj" />
+</Solution>
