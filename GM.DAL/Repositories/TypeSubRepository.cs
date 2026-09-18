@@ -22,8 +22,11 @@ namespace GM.DAL.Repositories
 
         public async Task<List<Typesub>> ReadTypeSun()
         {
-            var ListOfTypeSub= await _context.Typesubs
+            var ListOfTypeSub = await _context.Typesubs
                 .AsNoTracking()
+                
+              
+                
                 .ToListAsync();
 
             return ListOfTypeSub;

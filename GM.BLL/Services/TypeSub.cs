@@ -1,4 +1,5 @@
-﻿using GM.BLL.Interfaces;
+﻿using GM.BLL.DTOs.TypeDto;
+using GM.BLL.Interfaces;
 using GM.DAL.Domain;
 using GM.DAL.Interfaces;
 using System;
@@ -18,11 +19,19 @@ namespace GM.BLL.Services
         {
             _typeSub = typeSub;
         }
-      public  async Task<List<Typesub>> ReadTypeSub()
+      public  async Task<List<TypeSubDto>> ReadTypeSub()
         {
+            var typesubs = await _typeSub.ReadTypeSun();
 
+            var result =   typesubs.Select(x => new TypeSubDto
+            {
+                TypeSubId = x.TypeSubId,
+                Price = x.Price,
+                TimeSpan = x.TimeSpan
+                // ضع هنا فقط الحقول الموجودة في DTO، وسيتجاهل تلقائياً الحقل الزائد
+            }).ToList();
 
-            return await _typeSub.ReadTypeSun();
+            return result;
         }
     }
 }

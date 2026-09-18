@@ -1,4 +1,5 @@
-﻿using GM.DAL.Domain;
+﻿using GM.BLL.DTOs.TypeDto;
+using GM.DAL.Domain;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,7 @@ namespace GM.BLL.Interfaces
 {
     public interface ITypeSub
     {
-           Task<List<Typesub>> ReadTypeSub();
+     public      Task<List<TypeSubDto>> ReadTypeSub();
 
     }
 }
