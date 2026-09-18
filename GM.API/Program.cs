@@ -44,6 +44,9 @@ builder.Services.AddScoped<IPlayerService, PlayerService>();
 
 builder.Services.AddScoped<ITypeSub,TypeSub>();
 builder.Services.AddScoped<ITypeSubRepository, TypeSubRepository>();
+
+builder .Services.AddScoped<IBranchRepository, BranchRepository>();
+builder.Services.AddScoped<IBranchServies,BranchServies>();
 // في Program.cs
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
