@@ -25,13 +25,13 @@ public partial class Sub
 
     public int BranchesId { get; set; }
 
-    public int StatusOfSub { get; set; }
+    public decimal Price { get; set; }
+
 
     public virtual Branch Branches { get; set; } = null!;
 
     public virtual Player Player { get; set; } = null!;
 
-    public virtual Statusofsub StatusOfSubNavigation { get; set; } = null!;
 
     public virtual Typesub TypeSub { get; set; } = null!;
 }

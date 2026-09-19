@@ -47,6 +47,10 @@ builder.Services.AddScoped<ITypeSubRepository, TypeSubRepository>();
 
 builder .Services.AddScoped<IBranchRepository, BranchRepository>();
 builder.Services.AddScoped<IBranchServies,BranchServies>();
+
+builder.Services.AddScoped<ISubRepository, SubRepositoery>();
+builder.Services.AddScoped<ISubServies, SubServies>();
+
 // في Program.cs
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));

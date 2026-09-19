@@ -19,6 +19,7 @@ namespace GM.DAL.Repositories
             _context = context;
         }
 
+       
 
         public async Task<List<Typesub>> ReadTypeSun()
         {

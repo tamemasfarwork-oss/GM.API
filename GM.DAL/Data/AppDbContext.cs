@@ -28,7 +28,6 @@ public partial class AppDbContext : DbContext
 
     public virtual DbSet<Product> Products { get; set; }
 
-    public virtual DbSet<Statusofsub> Statusofsubs { get; set; }
 
     public virtual DbSet<Sub> Subs { get; set; }
 
@@ -196,18 +195,7 @@ public partial class AppDbContext : DbContext
                 .HasColumnName("product_name_");
         });
 
-        modelBuilder.Entity<Statusofsub>(entity =>
-        {
-            entity.HasKey(e => e.StatusOfSub1).HasName("PK__STATUSOF__24B137EBF3499FD7");
-
-            entity.ToTable("STATUSOFSUB");
-
-            entity.Property(e => e.StatusOfSub1).HasColumnName("status_of_sub");
-            entity.Property(e => e.Status)
-                .HasMaxLength(50)
-                .IsUnicode(false)
-                .HasColumnName("status");
-        });
+       
 
         modelBuilder.Entity<Sub>(entity =>
         {
@@ -237,7 +225,6 @@ public partial class AppDbContext : DbContext
                 .HasMaxLength(50)
                 .IsUnicode(false)
                 .HasColumnName("status");
-            entity.Property(e => e.StatusOfSub).HasColumnName("status_of_sub");
             entity.Property(e => e.TypeSubId).HasColumnName("type_sub_id");
 
             entity.HasOne(d => d.Branches).WithMany(p => p.Subs)
@@ -250,10 +237,7 @@ public partial class AppDbContext : DbContext
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__SUB__player_id__4E88ABD4");
 
-            entity.HasOne(d => d.StatusOfSubNavigation).WithMany(p => p.Subs)
-                .HasForeignKey(d => d.StatusOfSub)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__SUB__status_of_s__5165187F");
+           
 
             entity.HasOne(d => d.TypeSub).WithMany(p => p.Subs)
                 .HasForeignKey(d => d.TypeSubId)
