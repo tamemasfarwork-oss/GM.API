@@ -216,6 +216,10 @@ public partial class AppDbContext : DbContext
             entity.ToTable("SUB");
 
             entity.Property(e => e.SunId).HasColumnName("sun_id");
+            entity.Property(e => e.Price)
+    .HasColumnName("Price")
+    .HasColumnType("decimal(10,2)");
+
             entity.Property(e => e.Active).HasColumnName("active");
             entity.Property(e => e.BranchesId).HasColumnName("branches_id");
             entity.Property(e => e.CreateBy)
