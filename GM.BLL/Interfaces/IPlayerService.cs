@@ -12,5 +12,6 @@ namespace GM.BLL.Interfaces
         Task<bool> Create(CreatePalyerDto createPlayerDto);
         Task<bool> Update(UpdatePlayerDto updatePlayerDto);
         Task<bool> DisactivePlayer(int  playerId);
+        Task<List<GetPlayerDto>> GetPlayers();
     }
 }

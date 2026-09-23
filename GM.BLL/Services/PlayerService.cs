@@ -75,5 +75,19 @@ namespace GM.BLL.Services
 
         }
 
+        public async Task<List<GetPlayerDto>> GetPlayers()
+        {
+
+            var result = await _playerRepository.GetPlayersAsync(p => new GetPlayerDto
+            {
+                FirstName = p.FirstName,
+                LastName = p.LastName,
+                Type = p.Type,
+                DateJoin = p.DateJoin,
+                Phone = p.Phone
+            });
+
+            return result;
+        }
     }
 }

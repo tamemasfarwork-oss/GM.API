@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -13,5 +14,7 @@ namespace GM.DAL.Interfaces
         Task<bool> UpdateAsync(Player updatePlayer);
         Task<Player> FindeAsync(int PlayerID);
         Task<bool> DeactivatePlayer(Player player);
+        Task<List<TResult>> GetPlayersAsync<TResult>(
+         Expression<Func<Player, TResult>> selector);
     }
 }

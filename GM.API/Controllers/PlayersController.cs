@@ -1,5 +1,6 @@
 ﻿using GM.BLL.DTOs.PlayerDto;
 using GM.BLL.Interfaces;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GM.API.Controllers
@@ -62,5 +63,13 @@ namespace GM.API.Controllers
 
         }
 
+
+        [HttpGet("GetAllPlayers")]
+        public async Task<IActionResult> GetAllPlayers()
+        {
+           
+            var result = await _PlayerService.GetPlayers();
+            return result!= null ? Ok(result) : BadRequest();
+        }
     }
 }

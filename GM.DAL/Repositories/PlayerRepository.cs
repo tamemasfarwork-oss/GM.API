@@ -1,9 +1,11 @@
 ﻿using GM.DAL.Data;
 using GM.DAL.Domain;
 using GM.DAL.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -55,7 +57,15 @@ namespace GM.DAL.Repositories
 
         }
 
-
+        // Data Access Layer
+        public async Task<List<TResult>> GetPlayersAsync<TResult>(
+            Expression<Func<Player, TResult>> selector)
+        {
+            return await _context.Players
+                .Where(s => s.Active == 1)
+                .Select(selector)
+                .ToListAsync();
+        }
     }
 
 
