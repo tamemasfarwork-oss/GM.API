@@ -18,7 +18,7 @@ namespace GM.BLL.Services
         {
             this._playerRepository = playerRepository;
         }
-        public async Task<bool> Create( CreatePalyerDto careteplayer)
+        public async Task<int> Create( CreatePalyerDto careteplayer)
         {
             var student = new Player
             {
@@ -80,6 +80,7 @@ namespace GM.BLL.Services
 
             var result = await _playerRepository.GetPlayersAsync(p => new GetPlayerDto
             {
+                PlayerID=p.PlayerId,
                 FirstName = p.FirstName,
                 LastName = p.LastName,
                 Type = p.Type,

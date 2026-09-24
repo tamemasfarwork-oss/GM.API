@@ -8,6 +8,7 @@ namespace GM.BLL.DTOs.PlayerDto
 {
     public class GetPlayerDto
     {
+        public int PlayerID { get; set; }
         public string FirstName { get; set; } = null!;
 
         public string LastName { get; set; } = null!;

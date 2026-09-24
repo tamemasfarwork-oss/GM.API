@@ -19,13 +19,13 @@ namespace GM.DAL.Repositories
             _context = context;
         }
 
-        public async Task<bool> CreateAsync(Player createPlayer)
+        public async Task<int> CreateAsync(Player createPlayer)
         {
 
             await _context.Players.AddAsync(createPlayer);
          var  result =  await _context.SaveChangesAsync();
             Console.WriteLine(createPlayer.PlayerId);
-            return result > 0;
+            return createPlayer.PlayerId;
         }
 
         public async Task<bool> UpdateAsync(Player updatePlayer)//here the prameter only for arcticture

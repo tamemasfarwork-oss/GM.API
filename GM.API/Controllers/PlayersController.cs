@@ -22,17 +22,17 @@ namespace GM.API.Controllers
        
         
 
-        [HttpPost]
+        [HttpPost("create")]
         public async Task<ActionResult> Create(CreatePalyerDto createplayerDto)
         {
-            var result = await _PlayerService.Create(createplayerDto);
+            var playerid = await _PlayerService.Create(createplayerDto);
 
-            if (!result)
+            if (playerid < 0)
             {
                 return BadRequest("Failed to create player.");
             }
 
-            return Ok("Player created!");
+            return Ok(playerid);
         }
         [HttpPut("Updateplayer")]
         public async Task<ActionResult> UpdatePlayer(UpdatePlayerDto updateplayerDto)

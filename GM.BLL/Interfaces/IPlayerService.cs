@@ -9,7 +9,7 @@ namespace GM.BLL.Interfaces
 {
     public interface IPlayerService
     {
-        Task<bool> Create(CreatePalyerDto createPlayerDto);
+        Task<int> Create(CreatePalyerDto createPlayerDto);
         Task<bool> Update(UpdatePlayerDto updatePlayerDto);
         Task<bool> DisactivePlayer(int  playerId);
         Task<List<GetPlayerDto>> GetPlayers();
