@@ -71,5 +71,14 @@ namespace GM.API.Controllers
             var result = await _PlayerService.GetPlayers();
             return result!= null ? Ok(result) : BadRequest();
         }
+
+        [HttpGet("FindePlayer")]
+        public async Task<IActionResult> Finde_Player(int playerid)
+        {
+
+            var result = await _PlayerService.FindePlayer(playerid);
+            return result != null ? Ok(result) : BadRequest();
+
+        }
     }
 }

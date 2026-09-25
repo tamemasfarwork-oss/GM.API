@@ -1,4 +1,5 @@
 ﻿using GM.BLL.DTOs.PlayerDto;
+using GM.DAL.Domain;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,5 +14,6 @@ namespace GM.BLL.Interfaces
         Task<bool> Update(UpdatePlayerDto updatePlayerDto);
         Task<bool> DisactivePlayer(int  playerId);
         Task<List<GetPlayerDto>> GetPlayers();
+        Task<Player> FindePlayer(int playid);
     }
 }

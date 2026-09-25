@@ -36,6 +36,12 @@ namespace GM.BLL.Services
             return await _playerRepository.CreateAsync(student);
         }
 
+        public async Task<Player> FindePlayer(int playerid)
+        {
+            var player = await _playerRepository.FindeAsync(playerid);
+            return player;
+        }
+
         public async Task<bool> Update(UpdatePlayerDto updatePlayerDto)
         {
             var player = await _playerRepository.FindeAsync(updatePlayerDto.PlayerId);

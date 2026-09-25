@@ -10,5 +10,6 @@ namespace GM.DAL.Interfaces
     public interface ITypeSubRepository
     {
         Task<List<Typesub>> ReadTypeSun();
+        Task<Typesub> Find(int type_id);
     }
 }

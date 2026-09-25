@@ -15,35 +15,30 @@ namespace GM.BLL.Services
     {
 
         readonly private ISubRepository _subRepository;
-        public SubServies(ISubRepository subRepository)
+        readonly private ITypeSub _typesub;
+        public SubServies(ISubRepository subRepository,ITypeSub typeSub)
         {
             _subRepository = subRepository;
+            _typesub = typeSub;
         }
         public async Task<bool> AddSubSubServies(SubDto subDto)
         {
+            var typesub =  await _typesub.FindeAsync(subDto.TypeSubId);
+            var today = DateOnly.FromDateTime(DateTime.Now);
             var sub = new Sub
             {
-                Player = new Player
-                {
-                    FirstName = subDto.Player.FirstName,
-                    Active = 1,
-                    DateJoin = DateOnly.FromDateTime(DateTime.Now),
-                    LastName = subDto.Player.LastName,
-                    Phone = subDto.Player.Phone,
-                    CreateBy = "ahmed",
-                    Type = subDto.Player.Type
-
-
-                },
+              
                 Active = 1,
                 BranchesId = subDto.BranchesId,
-                CreateBy = subDto.CreateBy,
-                Status = subDto.Status,
-                DateEnd = subDto.DateEnd,
+                CreateBy ="tamim",
+                //subDto.CreateBy,
+                Status = "Active",
+                DateEnd = today.AddMonths(1),
                 DateSub = DateOnly.FromDateTime(DateTime.Now),
                 PaymentMethod = subDto.PaymentMethod,
                 TypeSubId = subDto.TypeSubId,
-                Price = subDto.Price,
+                Price = typesub.Price,
+                PlayerId=subDto.PlayerId
 
             };
 

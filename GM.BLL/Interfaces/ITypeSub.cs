@@ -11,6 +11,6 @@ namespace GM.BLL.Interfaces
     public interface ITypeSub
     {
      public      Task<List<TypeSubDto>> ReadTypeSub();
-
+        public Task<Typesub> FindeAsync(int id);
     }
 }

@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace GM.DAL.Repositories
 {
-    public class TypeSubRepository:ITypeSubRepository
+    public class TypeSubRepository : ITypeSubRepository
     {
 
         readonly private AppDbContext _context;
@@ -19,7 +19,11 @@ namespace GM.DAL.Repositories
             _context = context;
         }
 
-       
+        public  async Task<Typesub> Find(int type_id)
+        {
+            var typesup = await  _context.Typesubs.FindAsync(type_id);
+            return  typesup;
+        }
 
         public async Task<List<Typesub>> ReadTypeSun()
         {

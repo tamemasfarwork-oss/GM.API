@@ -19,7 +19,13 @@ namespace GM.BLL.Services
         {
             _typeSub = typeSub;
         }
-      public  async Task<List<TypeSubDto>> ReadTypeSub()
+
+        public  async Task<Typesub> FindeAsync(int id)
+        {
+            return await _typeSub.Find(id);
+        }
+
+        public  async Task<List<TypeSubDto>> ReadTypeSub()
         {
             var typesubs = await _typeSub.ReadTypeSun();
 
