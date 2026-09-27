@@ -15,5 +15,6 @@ namespace GM.BLL.Interfaces
         Task<bool> DisactivePlayer(int  playerId);
         Task<List<GetPlayerDto>> GetPlayers();
         Task<Player> FindePlayer(int playid);
+        Task<List<PlayerLookupDto>> Lookup(string? searchTerm);
     }
 }

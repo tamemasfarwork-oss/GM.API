@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -11,5 +12,7 @@ namespace GM.DAL.Interfaces
     {
         Task<bool> AddSub(Sub sub);
         Task<List<Sub>> GetLastThreeSub();
+        public Task<List<TResult>> GetSubscriptions<TResult>(
+    Expression<Func<Sub, TResult>> selector,int pageNumber , int pagesize);
     }
 }

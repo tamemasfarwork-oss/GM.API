@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -38,6 +39,19 @@ namespace GM.DAL.Repositories
                .Take(3)
                .AsNoTracking() // لتسريع الاستعلام لأنه للقراءة فقط
                .ToListAsync();
+        }
+
+        public  async Task<List<TResult>> GetSubscriptions<TResult>(Expression<Func<Sub, TResult>> selector, int pageNumber, int pagesize)
+        {
+            var bagesub =  await  _context.Subs
+                .OrderBy(s => s.SunId)
+                .Skip((pageNumber - 1) * pagesize)
+                .Take(pagesize)
+                .Select(selector)
+                .ToListAsync();
+            return bagesub;
+
+
         }
     }
 }

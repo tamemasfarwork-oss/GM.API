@@ -13,5 +13,6 @@ namespace GM.BLL.Interfaces
         Task<bool> AddSubSubServies(SubDto subDto);
 
         Task<List<SubLastThreeDto>> GetLastThreeSub();
+        Task<List<SubGetAll>> GetAllSubs(int pagenumber,int pagesize);
     }
 }

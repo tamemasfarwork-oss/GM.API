@@ -16,5 +16,10 @@ namespace GM.DAL.Interfaces
         Task<bool> DeactivatePlayer(Player player);
         Task<List<TResult>> GetPlayersAsync<TResult>(
          Expression<Func<Player, TResult>> selector);
-    }
+        public Task<List<TResult>> SearchByName<TResult>(
+            string? term,
+            int take,
+            Expression<Func<Player, TResult>> selector);
+            
+            }
 }

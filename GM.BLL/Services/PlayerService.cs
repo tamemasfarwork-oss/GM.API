@@ -36,7 +36,7 @@ namespace GM.BLL.Services
             return await _playerRepository.CreateAsync(student);
         }
 
-        public async Task<Player> FindePlayer(int playerid)
+        public async Task<Player>FindePlayer(int playerid)
         {
             var player = await _playerRepository.FindeAsync(playerid);
             return player;
@@ -50,7 +50,7 @@ namespace GM.BLL.Services
                 return false;
             }else
             {
-                player.Active = updatePlayerDto.Active;
+
                 player.FirstName = updatePlayerDto.FirstName;
                 player.LastName = updatePlayerDto.LastName;
                 player.Phone = updatePlayerDto.Phone;
@@ -95,6 +95,19 @@ namespace GM.BLL.Services
             });
 
             return result;
+        }
+
+
+        public async Task<List<PlayerLookupDto>> Lookup(string? searchTerm)
+        {
+            var term = searchTerm?.Trim();
+
+            // نبعت للـ DataAccess الشكل اللي بدنا ياه مباشرة: DTO فيه الرقم والاسم
+            return await _playerRepository.SearchByName(term, 10, p => new PlayerLookupDto
+            {
+                PlayerID = p.PlayerId,
+                FullName = p.FirstName + " " + p.LastName,
+            });
         }
     }
 }

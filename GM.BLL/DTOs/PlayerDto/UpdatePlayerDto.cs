@@ -21,7 +21,6 @@ namespace GM.BLL.DTOs.PlayerDto
 
 
 
-        public int Active { get; set; }
 
 
 

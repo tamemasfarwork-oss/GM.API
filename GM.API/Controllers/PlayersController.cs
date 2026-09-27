@@ -35,7 +35,7 @@ namespace GM.API.Controllers
             return Ok(playerid);
         }
         [HttpPut("Updateplayer")]
-        public async Task<ActionResult> UpdatePlayer(UpdatePlayerDto updateplayerDto)
+        public async Task<ActionResult> UpdatePlayer([FromBody] UpdatePlayerDto updateplayerDto)
         {
             var result = await _PlayerService.Update(updateplayerDto);
             if (result) {
@@ -47,6 +47,14 @@ namespace GM.API.Controllers
                 return BadRequest();
             }
         }
+
+        [HttpGet("Lookup")]
+        public async Task<ActionResult> Lookup([FromQuery] string? searchTerm)
+        {
+            var result = await _PlayerService.Lookup(searchTerm);
+            return Ok(result);
+        }
+
 
         [HttpPut("DisActivePlayer")]
         public async Task<IActionResult> Delete(int id) {
@@ -72,13 +80,11 @@ namespace GM.API.Controllers
             return result!= null ? Ok(result) : BadRequest();
         }
 
-        [HttpGet("FindePlayer")]
-        public async Task<IActionResult> Finde_Player(int playerid)
-        {
-
-            var result = await _PlayerService.FindePlayer(playerid);
-            return result != null ? Ok(result) : BadRequest();
-
-        }
+       [HttpGet("FindPlayer/{playerid}")]
+public async Task<IActionResult> FindPlayer(int playerid)
+{
+    var result = await _PlayerService.FindePlayer(playerid);
+    return result != null ? Ok(result) : NotFound(); // NotFound() أصح معنوياً من BadRequest() إذا لم يجد اللاعب
+}
     }
 }

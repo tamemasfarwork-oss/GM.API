@@ -45,6 +45,22 @@ namespace GM.BLL.Services
             return await _subRepository.AddSub(sub);
         }
 
+        public async Task<List<SubGetAll>> GetAllSubs(int pagenumber,int pagesize)
+        {
+            return await _subRepository.GetSubscriptions(s => new SubGetAll
+            {
+                subid = s.SunId,
+                startsub=s.DateSub,
+                branchname=s.Branches.BranchName,
+                price=s.TypeSub.Price,
+                fullname=s.Player.FirstName+' '+s.Player.LastName,
+                endsub=Convert.ToInt32( s.TypeSub.TimeSpan),
+                status=s.Status
+
+
+            }, pagenumber, pagesize);
+        }
+
         public async Task<List<SubLastThreeDto>> GetLastThreeSub()
         {
             var subs = await _subRepository.GetLastThreeSub();

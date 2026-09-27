@@ -7,6 +7,8 @@ using GM.DAL.Domain;
 using Microsoft.AspNetCore.Mvc;
 namespace GM.API.Controllers
 {
+    [ApiController]
+    [Route("[controller]")]
     public class SubscriptionController : Controller
     {
 
@@ -35,6 +37,13 @@ namespace GM.API.Controllers
             var result = await _subServies.GetLastThreeSub();
 
             return result != null ? Ok(result) :BadRequest() ;
+        }
+        [HttpGet("GetAllSubs")]
+         public async Task<IActionResult> GetAllSub( int pagenumber , int pagesize  )
+        {
+            var result = await _subServies.GetAllSubs(pagenumber, pagesize);
+
+            return result != null ? Ok(result) : BadRequest();
         }
     }
 }

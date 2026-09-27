@@ -66,6 +66,26 @@ namespace GM.DAL.Repositories
                 .Select(selector)
                 .ToListAsync();
         }
+
+
+        public async Task<List<TResult>> SearchByName<TResult>(
+    string? term,
+    int take,
+    Expression<Func<Player, TResult>> selector) // ← الشكل اللي بدنا ياه، جاي من الـ Business
+        {
+            var query = _context.Players.AsNoTracking().AsQueryable();
+
+            if (!string.IsNullOrEmpty(term))
+            {
+                query = query.Where(p => (p.FirstName + " " + p.LastName).Contains(term));
+            }
+
+            return await query
+                .OrderBy(p => p.FirstName)
+                .Take(take)
+                .Select(selector)   // EF بيترجمه لـ SQL، فبيجيب بس الأعمدة اللي بالـ selector
+                .ToListAsync();
+        }
     }
 
 
