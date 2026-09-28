@@ -84,6 +84,37 @@ public partial class AppDbContext : DbContext
                 .HasColumnType("decimal(10, 2)")
                 .HasColumnName("Total_Price");
         });
+        modelBuilder.Entity<Privatetrain>(entity =>
+        {
+            entity.HasKey(e => e.PrivateTrainId).HasName("PK__PRIVATET__8F9A2078B947455A");
+
+            entity.ToTable("PRIVATETRAIN");
+
+            entity.Property(e => e.PrivateTrainId).HasColumnName("private_train__id");
+            entity.Property(e => e.DateStart).HasColumnName("date_start");
+            entity.Property(e => e.PlayerId).HasColumnName("player_id");
+            entity.Property(e => e.PricePerMonth)
+                .HasColumnType("decimal(10, 2)")
+                .HasColumnName("price_per_month");
+            entity.Property(e => e.Status)
+                .HasMaxLength(20)
+                .IsUnicode(false)
+                .HasColumnName("status");
+            entity.Property(e => e.TheClubsShare)
+                .HasColumnType("decimal(10, 2)")
+                .HasColumnName("The_clubs_share");
+            entity.Property(e => e.TrainersId).HasColumnName("trainers_id");
+
+            entity.HasOne(d => d.Player).WithMany(p => p.Privatetrain)
+                .HasForeignKey(d => d.PlayerId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_PRIVATETRAIN_PLAYERS_player_id");
+
+            entity.HasOne(d => d.Trainers).WithMany(p => p.Privatetrains)
+                .HasForeignKey(d => d.TrainersId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__PRIVATETR__train__3D5E1FD2");
+        });
 
         modelBuilder.Entity<InvoiceItem>(entity =>
         {
@@ -139,41 +170,10 @@ public partial class AppDbContext : DbContext
                 .HasMaxLength(20)
                 .IsUnicode(false)
                 .HasColumnName("phone");
-            entity.Property(e => e.PrivateTrainId).HasColumnName("private_train__id");
             entity.Property(e => e.Type)
                 .HasMaxLength(30)
                 .IsUnicode(false)
                 .HasColumnName("type");
-
-            entity.HasOne(d => d.PrivateTrain).WithMany(p => p.Players)
-                .HasForeignKey(d => d.PrivateTrainId)
-                .HasConstraintName("FK__PLAYERS__private__403A8C7D");
-        });
-
-        modelBuilder.Entity<Privatetrain>(entity =>
-        {
-            entity.HasKey(e => e.PrivateTrainId).HasName("PK__PRIVATET__8F9A2078B947455A");
-
-            entity.ToTable("PRIVATETRAIN");
-
-            entity.Property(e => e.PrivateTrainId).HasColumnName("private_train__id");
-            entity.Property(e => e.DateStart).HasColumnName("date_start");
-            entity.Property(e => e.PricePerMonth)
-                .HasColumnType("decimal(10, 2)")
-                .HasColumnName("price_per_month");
-            entity.Property(e => e.Status)
-                .HasMaxLength(20)
-                .IsUnicode(false)
-                .HasColumnName("status");
-            entity.Property(e => e.TheClubsShare)
-                .HasColumnType("decimal(10, 2)")
-                .HasColumnName("The_clubs_share");
-            entity.Property(e => e.TrainersId).HasColumnName("trainers_id");
-
-            entity.HasOne(d => d.Trainers).WithMany(p => p.Privatetrains)
-                .HasForeignKey(d => d.TrainersId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__PRIVATETR__train__3D5E1FD2");
         });
 
         modelBuilder.Entity<Product>(entity =>
@@ -251,6 +251,9 @@ public partial class AppDbContext : DbContext
 
             entity.ToTable("TRAINERS");
 
+            entity.Property(e => e.FullName)
+        .HasMaxLength(100)
+        .HasColumnName("full_name");
             entity.Property(e => e.TrainersId).HasColumnName("trainers_id");
             entity.Property(e => e.CreateBy)
                 .HasMaxLength(100)

@@ -17,7 +17,13 @@ public partial class Privatetrain
 
     public int TrainersId { get; set; }
 
-    public virtual ICollection<Player> Players { get; set; } = new List<Player>();
+    // ... باقي الخصائص
+    public int PlayerId { get; set; }
+    public Player Player { get; set; } = null!;
 
     public virtual Trainer Trainers { get; set; } = null!;
+
+  
+
+
 }

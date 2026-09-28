@@ -22,4 +22,5 @@ public partial class Trainer
     public virtual ICollection<Privatetrain> Privatetrains { get; set; } = new List<Privatetrain>();
 
     public virtual ICollection<TrainersBranch> TrainersBranches { get; set; } = new List<TrainersBranch>();
+    public string FullName { get;  set; }
 }

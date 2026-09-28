@@ -44,10 +44,12 @@ namespace GM.DAL.Repositories
         public  async Task<List<TResult>> GetSubscriptions<TResult>(Expression<Func<Sub, TResult>> selector, int pageNumber, int pagesize)
         {
             var bagesub =  await  _context.Subs
+                .AsNoTracking()
                 .OrderBy(s => s.SunId)
                 .Skip((pageNumber - 1) * pagesize)
                 .Take(pagesize)
                 .Select(selector)
+                
                 .ToListAsync();
             return bagesub;
 
