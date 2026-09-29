@@ -86,6 +86,14 @@ namespace GM.DAL.Repositories
                 .Select(selector)   // EF بيترجمه لـ SQL، فبيجيب بس الأعمدة اللي بالـ selector
                 .ToListAsync();
         }
+
+        public async Task<int> CountPlayers()
+        {
+            var countplayers = await _context.Players.AsNoTracking()
+                .CountAsync();
+            return countplayers;
+                
+        }
     }
 
 

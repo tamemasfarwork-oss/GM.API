@@ -109,5 +109,10 @@ namespace GM.BLL.Services
                 FullName = p.FirstName + " " + p.LastName,
             });
         }
+
+        public async Task<int> CountPlayersServies()
+        {
+            return await _playerRepository.CountPlayers();
+        }
     }
 }

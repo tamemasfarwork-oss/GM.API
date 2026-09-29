@@ -16,5 +16,6 @@ namespace GM.BLL.Interfaces
         Task<List<GetPlayerDto>> GetPlayers();
         Task<Player> FindePlayer(int playid);
         Task<List<PlayerLookupDto>> Lookup(string? searchTerm);
+        Task<int> CountPlayersServies();
     }
 }

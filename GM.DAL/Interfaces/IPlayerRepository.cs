@@ -20,6 +20,10 @@ namespace GM.DAL.Interfaces
             string? term,
             int take,
             Expression<Func<Player, TResult>> selector);
+
+        Task<int> CountPlayers();
             
             }
+           
+
 }
