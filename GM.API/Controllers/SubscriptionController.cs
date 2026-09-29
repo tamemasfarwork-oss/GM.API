@@ -13,7 +13,7 @@ namespace GM.API.Controllers
     {
 
         readonly private ISubServies _subServies;
-        public SubscriptionController( ISubServies subServies)
+        public SubscriptionController(ISubServies subServies)
         {
             _subServies = subServies;
         }
@@ -21,7 +21,7 @@ namespace GM.API.Controllers
         public async Task<IActionResult> CreateSub([FromBody] SubDto subDtoFaker)
         {
 
-          
+
             var result = await _subServies.AddSubSubServies(subDtoFaker);
             if (result == true)
             {
@@ -36,14 +36,21 @@ namespace GM.API.Controllers
         {
             var result = await _subServies.GetLastThreeSub();
 
-            return result != null ? Ok(result) :BadRequest() ;
+            return result != null ? Ok(result) : BadRequest();
         }
         [HttpGet("GetAllSubs")]
-         public async Task<IActionResult> GetAllSub( int pagenumber , int pagesize  )
+        public async Task<IActionResult> GetAllSub(int pagenumber, int pagesize)
         {
             var result = await _subServies.GetAllSubs(pagenumber, pagesize);
 
             return result != null ? Ok(result) : BadRequest();
+        }
+        [HttpGet("SubUntilEx7days")]
+        public async Task<IActionResult> SubUntilEx7days(int days = 7)
+        {
+            var result = await _subServies.SubscriptionsRemaining7DaysToEXServies(days);
+            return result != null ? Ok(result) : BadRequest();
+
         }
     }
 }

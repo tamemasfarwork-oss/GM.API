@@ -15,7 +15,7 @@ namespace GM.BLL.DTOs.SubDtos
             public int TypeSubId { get; set; }
             public int BranchesId { get; set; }
 
-        
+            
 
     }
 }

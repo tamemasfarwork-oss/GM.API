@@ -14,5 +14,6 @@ namespace GM.BLL.Interfaces
 
         Task<List<SubLastThreeDto>> GetLastThreeSub();
         Task<List<SubGetAll>> GetAllSubs(int pagenumber,int pagesize);
+        Task<List<SubscriptionsRemaining7DaysToEXDto>> SubscriptionsRemaining7DaysToEXServies(int days);
     }
 }

@@ -29,6 +29,19 @@ namespace GM.DAL.Repositories
 
         }
 
+        public async Task<List<TResult>> SubscriptionsRemaining7DaysToEX<TResult>(
+     Expression<Func<Sub, TResult>> selector, int days = 7)
+        {
+            var today = DateOnly.FromDateTime(DateTime.Today);
+            var limit = today.AddDays(days);
+
+            return await _context.Subs
+                .AsNoTracking()
+                .Where(s => s.DateEnd >= today && s.DateEnd <= limit)
+                .OrderBy(s => s.DateEnd)
+                .Select(selector)
+                .ToListAsync();
+        }
         public  async Task<List<Sub>> GetLastThreeSub()
         {
             return await _context.Subs

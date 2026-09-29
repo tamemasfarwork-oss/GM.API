@@ -79,5 +79,23 @@ namespace GM.BLL.Services
 
             return result;
         }
+
+        public  async Task<List<SubscriptionsRemaining7DaysToEXDto>> SubscriptionsRemaining7DaysToEXServies(int days=7)
+        {
+            return await _subRepository.SubscriptionsRemaining7DaysToEX(s => new SubscriptionsRemaining7DaysToEXDto
+            {
+                Status = s.Status,
+                DateSub = s.DateSub,
+                DateEnd=s.DateEnd,
+                Fullname=s.Player.FirstName+' '+s.Player.LastName,
+                BranchName=s.Branches.BranchName,
+                CreateBy=s.CreateBy,
+                Price=s.Price
+                
+               
+
+            },days);
+
+        }
     }
 }

@@ -14,7 +14,7 @@ namespace GM.DAL.Interfaces
         Task<List<Sub>> GetLastThreeSub();
         public Task<List<TResult>> GetSubscriptions<TResult>(
     Expression<Func<Sub, TResult>> selector,int pageNumber , int pagesize);
-        Task<List<TResult>> Expiredsubscriptions<TResult>(
-    Expression<Func<Sub, TResult>> selector);
+        Task<List<TResult>> SubscriptionsRemaining7DaysToEX<TResult>(
+    Expression<Func<Sub, TResult>> selector,int days);
     }
 }
