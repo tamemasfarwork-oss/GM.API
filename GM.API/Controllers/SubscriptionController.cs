@@ -46,11 +46,32 @@ namespace GM.API.Controllers
             return result != null ? Ok(result) : BadRequest();
         }
         [HttpGet("SubUntilEx7days")]
-        public async Task<IActionResult> SubUntilEx7days(int days = 7)
+        public async Task<IActionResult> SubUntilEx7days()
         {
-            var result = await _subServies.SubscriptionsRemaining7DaysToEXServies(days);
+            var result = await _subServies.SubscriptionsRemaining7DaysToEXServies(7);
             return result != null ? Ok(result) : BadRequest();
 
         }
+        [HttpGet("GetActiveSub")]
+        public async Task<IActionResult> GetActiveSub()
+        {
+            var result = await _subServies.GetActiveSubsServies();
+            return result >=0 ? Ok(result) : BadRequest();
+
+        }
+        [HttpGet("Revenues")]
+        public  async Task<IActionResult> Revenues()
+        {
+
+            var result = await _subServies.RevenuesServies();
+            return result >= 0 ? Ok(result) : BadRequest();
+        }
+        [HttpGet("RevenueLast6Months")]
+        public async Task<ActionResult<List<MonthRevenueDto>>> RevenueLast6Months()
+        {
+            var result = await _subServies.GetRevenueLast6MonthsServies();
+            return Ok(result);
+        }
+
     }
 }

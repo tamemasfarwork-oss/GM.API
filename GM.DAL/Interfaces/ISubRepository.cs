@@ -5,6 +5,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
+using static GM.DAL.Repositories.SubRepositoery;
 
 namespace GM.DAL.Interfaces
 {
@@ -16,5 +17,9 @@ namespace GM.DAL.Interfaces
     Expression<Func<Sub, TResult>> selector,int pageNumber , int pagesize);
         Task<List<TResult>> SubscriptionsRemaining7DaysToEX<TResult>(
     Expression<Func<Sub, TResult>> selector,int days);
+        Task<int> GetActiveSubs();
+        Task<decimal> Revenues();
+        Task<List<MonthRevenue>> GetRevenueByMonthAsync(DateOnly from);
     }
+   
 }

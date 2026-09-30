@@ -84,14 +84,14 @@ namespace GM.API.Controllers
         public async Task<IActionResult> FindPlayer(int playerid)
             {
         var result = await _PlayerService.FindePlayer(playerid);
-     return result != null ? Ok(result) : NotFound(); // NotFound() أصح معنوياً من BadRequest() إذا لم يجد اللاعب
+     return result != null ? Ok(result) : NotFound(); // 
         }
 
         [HttpGet("countplayers")]
         public async Task<IActionResult> countplayers()
         {
             var result = await _PlayerService.CountPlayersServies();
-            return result >=0 ? Ok(result) : NotFound(); // NotFound() أصح معنوياً من BadRequest() إذا لم يجد اللاعب
+            return result >=0 ? Ok(result) : BadRequest(); // NotFound() أصح معنوياً من BadRequest() إذا لم يجد اللاعب
 
         }
     }

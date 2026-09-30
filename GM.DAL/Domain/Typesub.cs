@@ -10,6 +10,7 @@ public partial class Typesub
     public decimal Price { get; set; }
 
     public string TimeSpan { get; set; } = null!;
+    public int DurationMonths { get; set; }
 
     public virtual ICollection<Sub> Subs { get; set; } = new List<Sub>();
 }

@@ -24,7 +24,6 @@ public partial class Player
 
     public string CreateBy { get; set; } = null!;
 
-    public int? PrivateTrainId { get; set; }
 
     public ICollection<Privatetrain> Privatetrain { get; set; } = new List<Privatetrain>();
     public virtual ICollection<Sub> Subs { get; set; } = new List<Sub>();

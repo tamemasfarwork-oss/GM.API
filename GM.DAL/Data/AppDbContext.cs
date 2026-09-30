@@ -309,6 +309,9 @@ public partial class AppDbContext : DbContext
                 .HasMaxLength(50)
                 .IsUnicode(false)
                 .HasColumnName("time_span");
+            entity.Property(e => e.DurationMonths)
+          .HasColumnName("duration_months")
+          .HasDefaultValue(1);
         });
 
         modelBuilder.Entity<User>(entity =>

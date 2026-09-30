@@ -33,7 +33,7 @@ namespace GM.BLL.Services
                 CreateBy ="tamim",
                 //subDto.CreateBy,
                 Status = "Active",
-                DateEnd = today.AddMonths(1),
+                DateEnd = today.AddMonths(typesub.DurationMonths),
                 DateSub = DateOnly.FromDateTime(DateTime.Now),
                 PaymentMethod = subDto.PaymentMethod,
                 TypeSubId = subDto.TypeSubId,
@@ -45,6 +45,13 @@ namespace GM.BLL.Services
             return await _subRepository.AddSub(sub);
         }
 
+        public  async Task<int> GetActiveSubsServies()
+        {
+            var result = await  _subRepository.GetActiveSubs();
+
+            return result >= 0 ? result : 0;
+        }
+
         public async Task<List<SubGetAll>> GetAllSubs(int pagenumber,int pagesize)
         {
             return await _subRepository.GetSubscriptions(s => new SubGetAll
@@ -54,7 +61,7 @@ namespace GM.BLL.Services
                 branchname=s.Branches.BranchName,
                 price=s.TypeSub.Price,
                 fullname=s.Player.FirstName+' '+s.Player.LastName,
-                endsub=Convert.ToInt32( s.TypeSub.TimeSpan),
+                endsub=s.DateEnd,
                 status=s.Status
 
 
@@ -80,6 +87,11 @@ namespace GM.BLL.Services
             return result;
         }
 
+        public async Task<decimal> RevenuesServies()
+        {
+            return await _subRepository.Revenues();
+        }
+
         public  async Task<List<SubscriptionsRemaining7DaysToEXDto>> SubscriptionsRemaining7DaysToEXServies(int days=7)
         {
             return await _subRepository.SubscriptionsRemaining7DaysToEX(s => new SubscriptionsRemaining7DaysToEXDto
@@ -96,6 +108,23 @@ namespace GM.BLL.Services
 
             },days);
 
+        }
+        public async Task<List<MonthRevenueDto>> GetRevenueLast6MonthsServies()
+        {
+            var today = DateOnly.FromDateTime(DateTime.Today);
+            var start = new DateOnly(today.Year, today.Month, 1).AddMonths(-5);
+
+            var data = await _subRepository.GetRevenueByMonthAsync(start);
+
+            return Enumerable.Range(0, 6)
+                .Select(i => start.AddMonths(i))
+                .Select(d => new MonthRevenueDto
+                {
+                    Year = d.Year,
+                    Month = d.Month,
+                    Total = data.FirstOrDefault(x => x.Year == d.Year && x.Month == d.Month)?.Total ?? 0
+                })
+                .ToList();
         }
     }
 }

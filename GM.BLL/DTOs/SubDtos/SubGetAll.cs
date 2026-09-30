@@ -14,7 +14,7 @@ namespace GM.BLL.DTOs.SubDtos
      public   string status { get; set; }
      public   string branchname { get; set; }
      public   DateOnly startsub { get; set; }
-     public int endsub { get; set; }
+     public DateOnly endsub { get; set; }
 
     }
 }

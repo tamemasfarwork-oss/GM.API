@@ -13,6 +13,8 @@ namespace GM.DAL.Repositories
 {
     public class SubRepositoery:ISubRepository
     {
+
+        public record MonthRevenue(int Year, int Month, decimal Total);
         readonly private AppDbContext _context;
 
         public SubRepositoery(AppDbContext appDbContext)
@@ -68,5 +70,39 @@ namespace GM.DAL.Repositories
 
 
         }
+
+        public async Task<int> GetActiveSubs()
+        {
+            var result = await _context.Subs
+                .Where(s => s.Status == "Active")
+                .CountAsync();
+            return result;
+        }
+
+        public async Task<decimal> Revenues()
+        {
+
+            var today = DateOnly.FromDateTime(DateTime.Today);
+            var firstDay = new DateOnly(today.Year, today.Month, 1);
+            var nextMonth = firstDay.AddMonths(1);
+
+            return await _context.Subs
+                .AsNoTracking()
+                .Where(s => s.DateSub >= firstDay && s.DateSub < nextMonth)
+                .SumAsync(s => s.Price);
+        }
+
+       
+
+            public async Task<List<MonthRevenue>> GetRevenueByMonthAsync(DateOnly from)
+        {
+                       return await _context.Subs
+                .AsNoTracking()
+                .Where(s => s.DateSub >= from)
+                .GroupBy(s => new { s.DateSub.Year, s.DateSub.Month })
+                .Select(g => new MonthRevenue(g.Key.Year, g.Key.Month, g.Sum(s => s.Price)))
+                .ToListAsync();
+        }
+        
     }
 }
