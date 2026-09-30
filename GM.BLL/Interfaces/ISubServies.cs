@@ -3,6 +3,7 @@ using GM.DAL.Domain;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -18,6 +19,8 @@ namespace GM.BLL.Interfaces
         Task<int> GetActiveSubsServies();
         Task<decimal> RevenuesServies();
         public Task<List<MonthRevenueDto>> GetRevenueLast6MonthsServies();
+       Task<List<SubEXDto>> SubscriptionsExServies();
+
 
     }
 }

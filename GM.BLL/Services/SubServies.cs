@@ -126,5 +126,16 @@ namespace GM.BLL.Services
                 })
                 .ToList();
         }
+
+        public async Task<List<SubEXDto>> SubscriptionsExServies()
+        {
+            var result = await _subRepository.SubscriptionsEx(s => new SubEXDto
+            {
+                subid = s.SunId,
+                dateend = s.DateEnd,
+                nameplayer = s.Player.FirstName + ' ' + s.Player.LastName
+            });
+            return result;
+        }
     }
 }

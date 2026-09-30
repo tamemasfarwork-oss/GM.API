@@ -20,6 +20,8 @@ namespace GM.DAL.Interfaces
         Task<int> GetActiveSubs();
         Task<decimal> Revenues();
         Task<List<MonthRevenue>> GetRevenueByMonthAsync(DateOnly from);
+        Task<List<TResult>> SubscriptionsEx<TResult>(
+   Expression<Func<Sub, TResult>> selector);
     }
    
 }

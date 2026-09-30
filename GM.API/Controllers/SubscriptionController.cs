@@ -73,5 +73,12 @@ namespace GM.API.Controllers
             return Ok(result);
         }
 
+        [HttpGet("SubEX")]
+        public async Task<ActionResult> SubEX()
+        {
+            var result = await _subServies.SubscriptionsExServies();
+            return Ok(result);
+        }
+
     }
 }

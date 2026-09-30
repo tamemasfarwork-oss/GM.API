@@ -103,6 +103,17 @@ namespace GM.DAL.Repositories
                 .Select(g => new MonthRevenue(g.Key.Year, g.Key.Month, g.Sum(s => s.Price)))
                 .ToListAsync();
         }
-        
+
+        public async Task<List<TResult>> SubscriptionsEx<TResult>(Expression<Func<Sub, TResult>> selector)
+        {
+            var today = DateOnly.FromDateTime(DateTime.Today);
+            var result = await _context.Subs
+                .AsNoTracking()
+                .Where(s => s.DateEnd <today)
+                .Select(selector)
+                .ToListAsync();
+            return result;
+
+        }
     }
 }
