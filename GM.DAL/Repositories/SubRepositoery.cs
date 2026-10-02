@@ -109,7 +109,7 @@ namespace GM.DAL.Repositories
             var today = DateOnly.FromDateTime(DateTime.Today);
             var result = await _context.Subs
                 .AsNoTracking()
-                .Where(s => s.DateEnd <today)
+                .Where(s => s.DateEnd <today && s.Status == "Active")
                 .Select(selector)
                 .ToListAsync();
             return result;

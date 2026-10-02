@@ -20,6 +20,17 @@ namespace GM.BLL.Services
             _typeSub = typeSub;
         }
 
+        public async Task<int> AddTypeSubServies(TypeSubAddDto typeSubAddDto)
+        {
+
+            return await _typeSub.AddAsync(new Typesub
+            {
+                Price = typeSubAddDto.Price,
+                TimeSpan = typeSubAddDto.TimeSpan,
+                DurationMonths = typeSubAddDto.DurationMonths
+            });
+        }
+
         public  async Task<Typesub> FindeAsync(int id)
         {
             return await _typeSub.Find(id);

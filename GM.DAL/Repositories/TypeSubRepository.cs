@@ -19,6 +19,13 @@ namespace GM.DAL.Repositories
             _context = context;
         }
 
+        public async Task<int> AddAsync(Typesub typesub)
+        {
+            var result =await  _context.Typesubs.AddAsync(typesub);
+            await _context.SaveChangesAsync();
+            return typesub.TypeSubId;
+        }
+
         public  async Task<Typesub> Find(int type_id)
         {
             var typesup = await  _context.Typesubs.FindAsync(type_id);

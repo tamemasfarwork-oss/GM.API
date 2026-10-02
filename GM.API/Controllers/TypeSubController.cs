@@ -1,18 +1,40 @@
-﻿using GM.BLL.Interfaces;
+﻿using GM.BLL.DTOs.TypeDto;
+using GM.BLL.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GM.API.Controllers
 {
+    [ApiController]
+    [Route("[controller]")]
+   
     public class TypeSubController : Controller
     {
         readonly private ITypeSub _typesub;
+
+
+
+
+
+       
         public TypeSubController(ITypeSub typesub)
         {
             _typesub = typesub;
         }
-        public IActionResult Index()
+      
+
+
+        [HttpPost("AddTypeOfSub")]
+        public async Task<IActionResult> AddTypeOfSub(TypeSubAddDto typeSubAddDto)
         {
-            return View();
+            var result = await _typesub.AddTypeSubServies(typeSubAddDto);
+            if (result > 0)
+            {
+                return Ok(result);
+            }
+            else
+            {
+                return BadRequest();
+            }
         }
 
         [HttpGet("GetTypeOfSub")]
@@ -29,6 +51,10 @@ namespace GM.API.Controllers
 
                 return BadRequest();
             }
+
+
+           
         }
+      
     }
 }
