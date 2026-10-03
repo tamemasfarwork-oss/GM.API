@@ -1,68 +1,89 @@
 using GM.BLL.Interfaces;
 using GM.BLL.Services;
+using GM.BLL.Settings;
 using GM.DAL.Data;
 using GM.DAL.Interfaces;
 using GM.DAL.Repositories;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
-//using GM.DAL.Repositories;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// جلب Connection String
-IConfiguration configuration = new ConfigurationBuilder()
-    .SetBasePath(Directory.GetCurrentDirectory())
-    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-    .Build();
-string? connectionString = configuration.GetConnectionString("DefaultConnection");
-
-// Validate connection string.
+// قاعدة البيانات
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 if (string.IsNullOrWhiteSpace(connectionString))
+    throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+
+builder.Services.AddDbContext<AppDbContext>(options =>
 {
-    Console.WriteLine("Connection string not found.");
-    return;
-}
-// تسجيل AppDbContext باستعمال SQL Server
-var options = new DbContextOptionsBuilder<AppDbContext>()
-    .UseSqlServer(connectionString)
-    .LogTo(Console.WriteLine, LogLevel.Information)
-    .EnableSensitiveDataLogging()
-    .Options;
+    options.UseSqlServer(connectionString);
+    if (builder.Environment.IsDevelopment())
+        options.LogTo(Console.WriteLine, LogLevel.Information).EnableSensitiveDataLogging();
+});
+builder.Services.AddAuthorization(options =>
+{
+    options.FallbackPolicy = new AuthorizationPolicyBuilder()
+        .RequireAuthenticatedUser()
+        .Build();
+});
 
-
+// الخدمات
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
 
 builder.Services.AddScoped<IPlayerRepository, PlayerRepository>();
 builder.Services.AddScoped<IPlayerService, PlayerService>();
 
-builder.Services.AddScoped<ITypeSub,TypeSub>();
+builder.Services.AddScoped<ITypeSub, TypeSub>();
 builder.Services.AddScoped<ITypeSubRepository, TypeSubRepository>();
 
-builder .Services.AddScoped<IBranchRepository, BranchRepository>();
-builder.Services.AddScoped<IBranchServies,BranchServies>();
+builder.Services.AddScoped<IBranchRepository, BranchRepository>();
+builder.Services.AddScoped<IBranchServies, BranchServies>();
 
 builder.Services.AddScoped<ISubRepository, SubRepositoery>();
 builder.Services.AddScoped<ISubServies, SubServies>();
 
 builder.Services.AddScoped<ITreainersRepository, TrinersRepositoery>();
-
 builder.Services.AddScoped<ITrinersServies, TrinersServies>();
 
-
-builder.Services.AddScoped<IPrivateTrainRepository,PrivateTrainRepositry>();
-
+builder.Services.AddScoped<IPrivateTrainRepository, PrivateTrainRepositry>();
 builder.Services.AddScoped<IPrivateTrainServies, PrivateTrainServies>();
 
-// في Program.cs
-builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+// تسجيل الدخول والتوكن
+builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("Jwt"));
+builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
+
+var jwt = builder.Configuration.GetSection("Jwt").Get<JwtSettings>()!;
+if (string.IsNullOrWhiteSpace(jwt.Key) || jwt.Key.Length < 32)
+    throw new InvalidOperationException("Jwt:Key is missing or shorter than 32 characters.");
+
+builder.Services
+    .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(o =>
+    {
+        o.MapInboundClaims = false;
+        o.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidIssuer = jwt.Issuer,
+            ValidateAudience = true,
+            ValidAudience = jwt.Audience,
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwt.Key)),
+            ValidateLifetime = true,
+            ClockSkew = TimeSpan.Zero,
+        };
+    });
+
+builder.Services.AddAuthorization();
 
 builder.Services.AddCors(options =>
 {
@@ -73,14 +94,9 @@ builder.Services.AddCors(options =>
               .AllowAnyHeader();
     });
 });
-builder.Services.AddControllers();
-
 
 var app = builder.Build();
 
-
-
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -89,9 +105,8 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseCors("AllowAngularApp");
-
+app.UseAuthentication();
 app.UseAuthorization();
-
 app.MapControllers();
 
 app.Run();

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace GM.DAL.Domain;
+namespace GM.DAL.Domin;
 
 public partial class Sub
 {
@@ -12,6 +12,8 @@ public partial class Sub
     public DateOnly DateEnd { get; set; }
 
     public string PaymentMethod { get; set; } = null!;
+
+    public decimal Price { get; set; }
 
     public int Active { get; set; }
 
@@ -25,15 +27,13 @@ public partial class Sub
 
     public int BranchesId { get; set; }
 
-    public decimal Price { get; set; }
-
+    public int? ClubId { get; set; }
 
     public virtual Branch Branches { get; set; } = null!;
 
-    public virtual Player Player { get; set; } = null!;
-    public int? ClubId { get; set; }
     public virtual Club? Club { get; set; }
 
+    public virtual Player Player { get; set; } = null!;
 
     public virtual Typesub TypeSub { get; set; } = null!;
 }

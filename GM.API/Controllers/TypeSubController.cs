@@ -20,9 +20,21 @@ namespace GM.API.Controllers
         {
             _typesub = typesub;
         }
-      
 
 
+        [HttpPut("UpdateTypeOfSub")]
+        public async Task<IActionResult> UpdateTypeOfSub(TypeSubAddDto typeSubAddDto)
+        {
+            var result = await _typesub.UpdateTypeSubServies(typeSubAddDto);
+            if (result)
+            {
+                return Ok(result);
+            }
+            else
+            {
+                return BadRequest();
+            }
+        }
         [HttpPost("AddTypeOfSub")]
         public async Task<IActionResult> AddTypeOfSub(TypeSubAddDto typeSubAddDto)
         {

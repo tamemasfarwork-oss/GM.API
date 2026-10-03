@@ -7,11 +7,9 @@ using System.Threading.Tasks;
 
 namespace GM.DAL.Interfaces
 {
-    public interface IUserRepository
+    public interface IAuthRepositery
     {
         Task<User?> GetByEmailAsync(string email);
-        Task<bool> EmailExistsAsync(string email);
-        Task AddAsync(User user);
 
     }
 }

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace GM.DAL.Domain;
+namespace GM.DAL.Domin;
 
 public partial class User
 {
@@ -18,9 +18,12 @@ public partial class User
     public string? Adress { get; set; }
 
     public string Email { get; set; } = null!;
-    public int? ClubId { get; set; }
-    public virtual Club? Club { get; set; }
+
     public string Password { get; set; } = null!;
 
     public byte IsActive { get; set; }
+
+    public int? ClubId { get; set; }
+
+    public virtual Club? Club { get; set; }
 }

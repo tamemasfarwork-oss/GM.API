@@ -50,5 +50,19 @@ namespace GM.BLL.Services
 
             return result;
         }
+
+        public async Task<bool> UpdateTypeSubServies(TypeSubAddDto typeSubAddDto)
+        {
+            var update = new Typesub
+            {
+                TypeSubId = typeSubAddDto.TypeSubId,
+                Price = typeSubAddDto.Price,
+                // إذا كان TimeSpan في الـ DTO من نوع TimeSpan والكيان string استخدم .ToString()
+                TimeSpan = typeSubAddDto.TimeSpan?.ToString() ?? "",
+                DurationMonths = typeSubAddDto.DurationMonths
+            };
+            return  await _typeSub.UpdateAsync(update);
+            
+        }
     }
 }

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace GM.DAL.Domain;
+namespace GM.DAL.Domin;
 
 public partial class Trainer
 {
@@ -19,10 +19,13 @@ public partial class Trainer
 
     public decimal PricePerMonthPrivateTrain { get; set; }
 
+    public string? FullName { get; set; }
+
+    public int? ClubId { get; set; }
+
+    public virtual Club? Club { get; set; }
+
     public virtual ICollection<Privatetrain> Privatetrains { get; set; } = new List<Privatetrain>();
 
     public virtual ICollection<TrainersBranch> TrainersBranches { get; set; } = new List<TrainersBranch>();
-    public string FullName { get;  set; }
-    public int? ClubId { get; set; }
-    public virtual Club? Club { get; set; }
 }

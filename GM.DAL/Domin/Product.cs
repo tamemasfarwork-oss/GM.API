@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace GM.DAL.Domain;
+namespace GM.DAL.Domin;
 
 public partial class Product
 {
@@ -15,7 +15,9 @@ public partial class Product
 
     public decimal CostPrice { get; set; }
 
-    public virtual ICollection<InvoiceItem> InvoiceItems { get; set; } = new List<InvoiceItem>();
     public int? ClubId { get; set; }
+
     public virtual Club? Club { get; set; }
+
+    public virtual ICollection<InvoiceItem> InvoiceItems { get; set; } = new List<InvoiceItem>();
 }

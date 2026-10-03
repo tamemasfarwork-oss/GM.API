@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace GM.DAL.Domain;
+namespace GM.DAL.Domin;
 
 public partial class InvoiceItem
 {
@@ -15,9 +15,11 @@ public partial class InvoiceItem
 
     public int ProductId { get; set; }
 
+    public int? ClubId { get; set; }
+
+    public virtual Club? Club { get; set; }
+
     public virtual Invoice Invoices { get; set; } = null!;
 
     public virtual Product Product { get; set; } = null!;
-    public int? ClubId { get; set; }
-    public virtual Club? Club { get; set; }
 }

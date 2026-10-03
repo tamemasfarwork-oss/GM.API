@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace GM.DAL.Domain;
+namespace GM.DAL.Domin;
 
 public partial class Privatetrain
 {
@@ -17,14 +17,13 @@ public partial class Privatetrain
 
     public int TrainersId { get; set; }
 
-    // ... باقي الخصائص
     public int PlayerId { get; set; }
-    public Player Player { get; set; } = null!;
 
-    public virtual Trainer Trainers { get; set; } = null!;
     public int? ClubId { get; set; }
+
     public virtual Club? Club { get; set; }
 
+    public virtual Player Player { get; set; } = null!;
 
-
+    public virtual Trainer Trainers { get; set; } = null!;
 }

@@ -9,7 +9,7 @@ namespace GM.BLL.DTOs.TypeDto
     public class TypeSubAddDto
     {
 
-        public int? TypeSubId { get; set; }
+        public int TypeSubId { get; set; } = 0;
 
         public decimal Price { get; set; }
 

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace GM.DAL.Domain;
+namespace GM.DAL.Domin;
 
 public partial class Invoice
 {
@@ -12,7 +12,9 @@ public partial class Invoice
     public DateTime SaleDate { get; set; }
 
     public string PaymentMethod { get; set; } = null!;
+
     public int? ClubId { get; set; }
+
     public virtual Club? Club { get; set; }
 
     public virtual ICollection<InvoiceItem> InvoiceItems { get; set; } = new List<InvoiceItem>();

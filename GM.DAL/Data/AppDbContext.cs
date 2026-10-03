@@ -1,22 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
-using GM.DAL.Domain;
+using GM.DAL.Domin;
 using Microsoft.EntityFrameworkCore;
 
 namespace GM.DAL.Data;
 
 public partial class AppDbContext : DbContext
 {
-    public AppDbContext()
-    {
-    }
-
     public AppDbContext(DbContextOptions<AppDbContext> options)
         : base(options)
     {
     }
 
     public virtual DbSet<Branch> Branches { get; set; }
+
+    public virtual DbSet<Club> Clubs { get; set; }
 
     public virtual DbSet<Invoice> Invoices { get; set; }
 
@@ -28,7 +26,6 @@ public partial class AppDbContext : DbContext
 
     public virtual DbSet<Product> Products { get; set; }
 
-
     public virtual DbSet<Sub> Subs { get; set; }
 
     public virtual DbSet<Trainer> Trainers { get; set; }
@@ -39,10 +36,6 @@ public partial class AppDbContext : DbContext
 
     public virtual DbSet<User> Users { get; set; }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Server=.;Database=Gym_mangementDB;Trusted_Connection=True;TrustServerCertificate=True;");
-
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Branch>(entity =>
@@ -50,6 +43,8 @@ public partial class AppDbContext : DbContext
             entity.HasKey(e => e.BranchesId).HasName("PK__BRANCHES__9486489A26CBF85B");
 
             entity.ToTable("BRANCHES");
+
+            entity.HasIndex(e => e.ClubId, "IX_BRANCHES_CLUB");
 
             entity.Property(e => e.BranchesId).HasColumnName("branches_id");
             entity.Property(e => e.BranchAddres)
@@ -64,6 +59,30 @@ public partial class AppDbContext : DbContext
                 .HasMaxLength(100)
                 .IsUnicode(false)
                 .HasColumnName("branch_name_");
+            entity.Property(e => e.ClubId).HasColumnName("CLUB_ID");
+
+            entity.HasOne(d => d.Club).WithMany(p => p.Branches)
+                .HasForeignKey(d => d.ClubId)
+                .HasConstraintName("FK_BRANCHES_CLUBS");
+        });
+
+        modelBuilder.Entity<Club>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__CLUBS__3214EC2793EC908B");
+
+            entity.ToTable("CLUBS");
+
+            entity.Property(e => e.Id).HasColumnName("ID");
+            entity.Property(e => e.CreatedAt)
+                .HasDefaultValueSql("(sysutcdatetime())")
+                .HasColumnName("CREATED_AT");
+            entity.Property(e => e.IsActive)
+                .HasDefaultValue(true)
+                .HasColumnName("IS_ACTIVE");
+            entity.Property(e => e.Name)
+                .HasMaxLength(150)
+                .HasColumnName("NAME");
+            entity.Property(e => e.SubscriptionEnd).HasColumnName("SUBSCRIPTION_END");
         });
 
         modelBuilder.Entity<Invoice>(entity =>
@@ -72,7 +91,10 @@ public partial class AppDbContext : DbContext
 
             entity.ToTable("INVOICES");
 
+            entity.HasIndex(e => e.ClubId, "IX_INVOICES_CLUB");
+
             entity.Property(e => e.InvoicesId).HasColumnName("Invoices_id");
+            entity.Property(e => e.ClubId).HasColumnName("CLUB_ID");
             entity.Property(e => e.PaymentMethod)
                 .HasMaxLength(50)
                 .IsUnicode(false)
@@ -83,37 +105,10 @@ public partial class AppDbContext : DbContext
             entity.Property(e => e.TotalPrice)
                 .HasColumnType("decimal(10, 2)")
                 .HasColumnName("Total_Price");
-        });
-        modelBuilder.Entity<Privatetrain>(entity =>
-        {
-            entity.HasKey(e => e.PrivateTrainId).HasName("PK__PRIVATET__8F9A2078B947455A");
 
-            entity.ToTable("PRIVATETRAIN");
-
-            entity.Property(e => e.PrivateTrainId).HasColumnName("private_train__id");
-            entity.Property(e => e.DateStart).HasColumnName("date_start");
-            entity.Property(e => e.PlayerId).HasColumnName("player_id");
-            entity.Property(e => e.PricePerMonth)
-                .HasColumnType("decimal(10, 2)")
-                .HasColumnName("price_per_month");
-            entity.Property(e => e.Status)
-                .HasMaxLength(20)
-                .IsUnicode(false)
-                .HasColumnName("status");
-            entity.Property(e => e.TheClubsShare)
-                .HasColumnType("decimal(10, 2)")
-                .HasColumnName("The_clubs_share");
-            entity.Property(e => e.TrainersId).HasColumnName("trainers_id");
-
-            entity.HasOne(d => d.Player).WithMany(p => p.Privatetrain)
-                .HasForeignKey(d => d.PlayerId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_PRIVATETRAIN_PLAYERS_player_id");
-
-            entity.HasOne(d => d.Trainers).WithMany(p => p.Privatetrains)
-                .HasForeignKey(d => d.TrainersId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__PRIVATETR__train__3D5E1FD2");
+            entity.HasOne(d => d.Club).WithMany(p => p.Invoices)
+                .HasForeignKey(d => d.ClubId)
+                .HasConstraintName("FK_INVOICES_CLUBS");
         });
 
         modelBuilder.Entity<InvoiceItem>(entity =>
@@ -122,13 +117,20 @@ public partial class AppDbContext : DbContext
 
             entity.ToTable("INVOICE_ITEMS");
 
+            entity.HasIndex(e => e.ClubId, "IX_INVOICE_ITEMS_CLUB");
+
             entity.Property(e => e.InvoiceItemsId).HasColumnName("Invoice_Items_id");
+            entity.Property(e => e.ClubId).HasColumnName("CLUB_ID");
             entity.Property(e => e.InvoicesId).HasColumnName("Invoices_id");
             entity.Property(e => e.ProductId).HasColumnName("product__id");
             entity.Property(e => e.Quantity).HasColumnName("Quantity_");
             entity.Property(e => e.UnitPrice)
                 .HasColumnType("decimal(10, 2)")
                 .HasColumnName("Unit_Price_");
+
+            entity.HasOne(d => d.Club).WithMany(p => p.InvoiceItems)
+                .HasForeignKey(d => d.ClubId)
+                .HasConstraintName("FK_INVOICE_ITEMS_CLUBS");
 
             entity.HasOne(d => d.Invoices).WithMany(p => p.InvoiceItems)
                 .HasForeignKey(d => d.InvoicesId)
@@ -147,8 +149,11 @@ public partial class AppDbContext : DbContext
 
             entity.ToTable("PLAYERS");
 
+            entity.HasIndex(e => e.ClubId, "IX_PLAYERS_CLUB");
+
             entity.Property(e => e.PlayerId).HasColumnName("player_id");
             entity.Property(e => e.Active).HasColumnName("active");
+            entity.Property(e => e.ClubId).HasColumnName("CLUB_ID");
             entity.Property(e => e.CreateBy)
                 .HasMaxLength(100)
                 .IsUnicode(false)
@@ -174,6 +179,50 @@ public partial class AppDbContext : DbContext
                 .HasMaxLength(30)
                 .IsUnicode(false)
                 .HasColumnName("type");
+
+            entity.HasOne(d => d.Club).WithMany(p => p.Players)
+                .HasForeignKey(d => d.ClubId)
+                .HasConstraintName("FK_PLAYERS_CLUBS");
+        });
+
+        modelBuilder.Entity<Privatetrain>(entity =>
+        {
+            entity.HasKey(e => e.PrivateTrainId).HasName("PK__PRIVATET__8F9A2078B947455A");
+
+            entity.ToTable("PRIVATETRAIN");
+
+            entity.HasIndex(e => e.ClubId, "IX_PRIVATETRAIN_CLUB");
+
+            entity.HasIndex(e => e.PlayerId, "IX_PRIVATETRAIN_player_id");
+
+            entity.Property(e => e.PrivateTrainId).HasColumnName("private_train__id");
+            entity.Property(e => e.ClubId).HasColumnName("CLUB_ID");
+            entity.Property(e => e.DateStart).HasColumnName("date_start");
+            entity.Property(e => e.PlayerId).HasColumnName("player_id");
+            entity.Property(e => e.PricePerMonth)
+                .HasColumnType("decimal(10, 2)")
+                .HasColumnName("price_per_month");
+            entity.Property(e => e.Status)
+                .HasMaxLength(20)
+                .IsUnicode(false)
+                .HasColumnName("status");
+            entity.Property(e => e.TheClubsShare)
+                .HasColumnType("decimal(10, 2)")
+                .HasColumnName("The_clubs_share");
+            entity.Property(e => e.TrainersId).HasColumnName("trainers_id");
+
+            entity.HasOne(d => d.Club).WithMany(p => p.Privatetrains)
+                .HasForeignKey(d => d.ClubId)
+                .HasConstraintName("FK_PRIVATETRAIN_CLUBS");
+
+            entity.HasOne(d => d.Player).WithMany(p => p.Privatetrains)
+                .HasForeignKey(d => d.PlayerId)
+                .OnDelete(DeleteBehavior.ClientSetNull);
+
+            entity.HasOne(d => d.Trainers).WithMany(p => p.Privatetrains)
+                .HasForeignKey(d => d.TrainersId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__PRIVATETR__train__3D5E1FD2");
         });
 
         modelBuilder.Entity<Product>(entity =>
@@ -182,7 +231,10 @@ public partial class AppDbContext : DbContext
 
             entity.ToTable("PRODUCTS");
 
+            entity.HasIndex(e => e.ClubId, "IX_PRODUCTS_CLUB");
+
             entity.Property(e => e.ProductId).HasColumnName("product__id");
+            entity.Property(e => e.ClubId).HasColumnName("CLUB_ID");
             entity.Property(e => e.CostPrice)
                 .HasColumnType("decimal(10, 2)")
                 .HasColumnName("cost_price");
@@ -193,9 +245,11 @@ public partial class AppDbContext : DbContext
                 .HasMaxLength(100)
                 .IsUnicode(false)
                 .HasColumnName("product_name_");
-        });
 
-       
+            entity.HasOne(d => d.Club).WithMany(p => p.Products)
+                .HasForeignKey(d => d.ClubId)
+                .HasConstraintName("FK_PRODUCTS_CLUBS");
+        });
 
         modelBuilder.Entity<Sub>(entity =>
         {
@@ -203,13 +257,12 @@ public partial class AppDbContext : DbContext
 
             entity.ToTable("SUB");
 
-            entity.Property(e => e.SunId).HasColumnName("sun_id");
-            entity.Property(e => e.Price)
-    .HasColumnName("Price")
-    .HasColumnType("decimal(10,2)");
+            entity.HasIndex(e => e.ClubId, "IX_SUB_CLUB");
 
+            entity.Property(e => e.SunId).HasColumnName("sun_id");
             entity.Property(e => e.Active).HasColumnName("active");
             entity.Property(e => e.BranchesId).HasColumnName("branches_id");
+            entity.Property(e => e.ClubId).HasColumnName("CLUB_ID");
             entity.Property(e => e.CreateBy)
                 .HasMaxLength(100)
                 .IsUnicode(false)
@@ -221,6 +274,7 @@ public partial class AppDbContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("payment_method");
             entity.Property(e => e.PlayerId).HasColumnName("player_id");
+            entity.Property(e => e.Price).HasColumnType("decimal(10, 2)");
             entity.Property(e => e.Status)
                 .HasMaxLength(50)
                 .IsUnicode(false)
@@ -232,12 +286,14 @@ public partial class AppDbContext : DbContext
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__SUB__branches_id__5070F446");
 
+            entity.HasOne(d => d.Club).WithMany(p => p.Subs)
+                .HasForeignKey(d => d.ClubId)
+                .HasConstraintName("FK_SUB_CLUBS");
+
             entity.HasOne(d => d.Player).WithMany(p => p.Subs)
                 .HasForeignKey(d => d.PlayerId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__SUB__player_id__4E88ABD4");
-
-           
 
             entity.HasOne(d => d.TypeSub).WithMany(p => p.Subs)
                 .HasForeignKey(d => d.TypeSubId)
@@ -251,15 +307,18 @@ public partial class AppDbContext : DbContext
 
             entity.ToTable("TRAINERS");
 
-            entity.Property(e => e.FullName)
-        .HasMaxLength(100)
-        .HasColumnName("full_name");
+            entity.HasIndex(e => e.ClubId, "IX_TRAINERS_CLUB");
+
             entity.Property(e => e.TrainersId).HasColumnName("trainers_id");
+            entity.Property(e => e.ClubId).HasColumnName("CLUB_ID");
             entity.Property(e => e.CreateBy)
                 .HasMaxLength(100)
                 .IsUnicode(false)
                 .HasColumnName("create_by_");
             entity.Property(e => e.DateWork).HasColumnName("date_work");
+            entity.Property(e => e.FullName)
+                .HasMaxLength(100)
+                .HasColumnName("full_name");
             entity.Property(e => e.IsActive)
                 .HasDefaultValue((byte)1)
                 .HasColumnName("is_active");
@@ -272,6 +331,10 @@ public partial class AppDbContext : DbContext
             entity.Property(e => e.Specialization)
                 .HasMaxLength(100)
                 .IsUnicode(false);
+
+            entity.HasOne(d => d.Club).WithMany(p => p.Trainers)
+                .HasForeignKey(d => d.ClubId)
+                .HasConstraintName("FK_TRAINERS_CLUBS");
         });
 
         modelBuilder.Entity<TrainersBranch>(entity =>
@@ -280,14 +343,21 @@ public partial class AppDbContext : DbContext
 
             entity.ToTable("TRAINERS_BRANCHES");
 
+            entity.HasIndex(e => e.ClubId, "IX_TRAINERS_BRANCHES_CLUB");
+
             entity.Property(e => e.TrainersBranchesId).HasColumnName("trainers_branches_id");
             entity.Property(e => e.BranchesId).HasColumnName("branches_id");
+            entity.Property(e => e.ClubId).HasColumnName("CLUB_ID");
             entity.Property(e => e.TrainersId).HasColumnName("trainers_id");
 
             entity.HasOne(d => d.Branches).WithMany(p => p.TrainersBranches)
                 .HasForeignKey(d => d.BranchesId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__TRAINERS___branc__5BE2A6F2");
+
+            entity.HasOne(d => d.Club).WithMany(p => p.TrainersBranches)
+                .HasForeignKey(d => d.ClubId)
+                .HasConstraintName("FK_TRAINERS_BRANCHES_CLUBS");
 
             entity.HasOne(d => d.Trainers).WithMany(p => p.TrainersBranches)
                 .HasForeignKey(d => d.TrainersId)
@@ -301,7 +371,13 @@ public partial class AppDbContext : DbContext
 
             entity.ToTable("TYPESUB");
 
+            entity.HasIndex(e => e.ClubId, "IX_TYPESUB_CLUB");
+
             entity.Property(e => e.TypeSubId).HasColumnName("type_sub_id");
+            entity.Property(e => e.ClubId).HasColumnName("CLUB_ID");
+            entity.Property(e => e.DurationMonths)
+                .HasDefaultValue(1)
+                .HasColumnName("duration_months");
             entity.Property(e => e.Price)
                 .HasColumnType("decimal(10, 2)")
                 .HasColumnName("price");
@@ -309,9 +385,10 @@ public partial class AppDbContext : DbContext
                 .HasMaxLength(50)
                 .IsUnicode(false)
                 .HasColumnName("time_span");
-            entity.Property(e => e.DurationMonths)
-          .HasColumnName("duration_months")
-          .HasDefaultValue(1);
+
+            entity.HasOne(d => d.Club).WithMany(p => p.Typesubs)
+                .HasForeignKey(d => d.ClubId)
+                .HasConstraintName("FK_TYPESUB_CLUBS");
         });
 
         modelBuilder.Entity<User>(entity =>
@@ -320,12 +397,15 @@ public partial class AppDbContext : DbContext
 
             entity.ToTable("USERS");
 
+            entity.HasIndex(e => e.ClubId, "IX_USERS_CLUB");
+
             entity.Property(e => e.UserId).HasColumnName("user_id");
             entity.Property(e => e.Adress)
                 .HasMaxLength(255)
                 .IsUnicode(false)
                 .HasColumnName("adress");
             entity.Property(e => e.Age).HasColumnName("age");
+            entity.Property(e => e.ClubId).HasColumnName("CLUB_ID");
             entity.Property(e => e.Email)
                 .HasMaxLength(100)
                 .IsUnicode(false)
@@ -349,6 +429,10 @@ public partial class AppDbContext : DbContext
                 .HasMaxLength(20)
                 .IsUnicode(false)
                 .HasColumnName("phone_numaer");
+
+            entity.HasOne(d => d.Club).WithMany(p => p.Users)
+                .HasForeignKey(d => d.ClubId)
+                .HasConstraintName("FK_USERS_CLUBS");
         });
 
         OnModelCreatingPartial(modelBuilder);

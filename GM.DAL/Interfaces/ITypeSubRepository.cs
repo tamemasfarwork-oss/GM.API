@@ -12,5 +12,6 @@ namespace GM.DAL.Interfaces
         Task<List<Typesub>> ReadTypeSun();
         Task<Typesub> Find(int type_id);
         Task<int> AddAsync( Typesub typesub);
+        Task<bool> UpdateAsync(Typesub typesub);
     }
 }

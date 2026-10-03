@@ -44,5 +44,16 @@ namespace GM.DAL.Repositories
             return ListOfTypeSub;
            
         }
+
+        public async Task<bool> UpdateAsync(Typesub typesub)
+        {
+            _context.Entry(typesub).State = EntityState.Modified;
+
+            // حفظ التغييرات في قاعدة البيانات
+            var rowsAffected = await _context.SaveChangesAsync();
+
+            // إرجاع true إذا تم تعديل صف واحد على الأقل
+            return rowsAffected > 0;
+        }
     }
 }

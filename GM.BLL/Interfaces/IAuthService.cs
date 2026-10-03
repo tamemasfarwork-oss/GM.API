@@ -1,5 +1,4 @@
 ﻿using GM.BLL.DTOs.Authdto;
-using GM.BLL.DTOs.UserDto;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,10 +7,9 @@ using System.Threading.Tasks;
 
 namespace GM.BLL.Interfaces
 {
-    public interface IUserService
+    public interface IAuthService
     {
-        Task<string?> RegisterAsync(CreateUserDto dto);   // ترجع رمز الخطأ، أو null عند النجاح
+        Task<LoginResponseDto?> LoginAsync(LoginRequestDto dto);
 
     }
-
 }

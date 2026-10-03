@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace GM.DAL.Domain;
+namespace GM.DAL.Domin;
 
 public partial class Branch
 {
@@ -13,9 +13,11 @@ public partial class Branch
 
     public string BranchManger { get; set; } = null!;
 
-    public virtual ICollection<Sub> Subs { get; set; } = new List<Sub>();
     public int? ClubId { get; set; }
+
     public virtual Club? Club { get; set; }
+
+    public virtual ICollection<Sub> Subs { get; set; } = new List<Sub>();
 
     public virtual ICollection<TrainersBranch> TrainersBranches { get; set; } = new List<TrainersBranch>();
 }

@@ -13,5 +13,6 @@ namespace GM.BLL.Interfaces
      public      Task<List<TypeSubDto>> ReadTypeSub();
         public Task<Typesub> FindeAsync(int id);
         Task<int>AddTypeSubServies(TypeSubAddDto typeSubAddDto);
+        Task<bool> UpdateTypeSubServies(TypeSubAddDto typeSubAddDto);
     }
 }
