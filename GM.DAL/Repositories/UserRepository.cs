@@ -1,5 +1,5 @@
 ﻿using GM.DAL.Data;
-using GM.DAL.Domain;
+using GM.DAL.Domin;
 using GM.DAL.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -27,10 +27,11 @@ namespace GM.DAL.Repositories
             return result > 0;
         }
         public Task<User?> GetByEmailAsync(string email) =>
-      _context.Users.AsNoTracking().FirstOrDefaultAsync(u => u.Email == email);
+      _context.Users.IgnoreQueryFilters()
+               .FirstOrDefaultAsync(u => u.Email == email);
 
         public Task<bool> EmailExistsAsync(string email) =>
-            _context.Users.AnyAsync(u => u.Email == email);
+            _context    .Users.IgnoreQueryFilters().AnyAsync(u => u.Email == email);
 
         public async Task AddAsync(User user)
         {

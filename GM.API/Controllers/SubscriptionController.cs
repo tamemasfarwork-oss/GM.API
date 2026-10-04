@@ -3,7 +3,7 @@ using Bogus;
 using GM.BLL.DTOs.SubDtos;
 using GM.BLL.DTOs.UserDto;
 using GM.BLL.Interfaces;
-using GM.DAL.Domain;
+using GM.DAL.Domin;
 using Microsoft.AspNetCore.Mvc;
 namespace GM.API.Controllers
 {

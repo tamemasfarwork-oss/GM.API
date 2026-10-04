@@ -1,6 +1,6 @@
 ﻿using GM.BLL.Interfaces;
 using GM.BLL.Settings;
-using GM.DAL.Domain;
+using GM.DAL.Domin;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System;
@@ -25,6 +25,7 @@ namespace GM.BLL.Services
             new(JwtRegisteredClaimNames.Sub, user.UserId.ToString()),
             new(JwtRegisteredClaimNames.Email, user.Email),
             new("full_name", $"{user.FirstName} {user.LastName}"),
+             new("club_id", user.ClubId?.ToString() ?? "")
         };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwt.Key));

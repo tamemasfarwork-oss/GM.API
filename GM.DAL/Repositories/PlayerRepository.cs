@@ -1,5 +1,5 @@
 ﻿using GM.DAL.Data;
-using GM.DAL.Domain;
+using GM.DAL.Domin;
 using GM.DAL.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -38,7 +38,7 @@ namespace GM.DAL.Repositories
         }
      public  async Task<Player> FindeAsync(int PlayerID)
         {
-             var palyer =  await _context.Players.FindAsync(PlayerID);
+             var palyer =  await _context.Players.FirstOrDefaultAsync(S=>S.PlayerId==PlayerID);
 
             return palyer;
         }

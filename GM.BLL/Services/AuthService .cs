@@ -28,7 +28,8 @@ namespace GM.BLL.Services
             // نفس النتيجة (null) سواء البريد خطأ أو كلمة المرور خطأ أو الحساب غير مفعّل
             if (user is null || user.IsActive != 1 || !PasswordMatches(dto.Password, user.Password))
                 return null;
-
+            if (user.ClubId is null)
+                return null;
             var (token, expires) = _tokens.Create(user);
 
             return new LoginResponseDto

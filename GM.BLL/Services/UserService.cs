@@ -1,7 +1,7 @@
 ﻿using GM.BLL.DTOs.Authdto;
 using GM.BLL.DTOs.UserDto;
 using GM.BLL.Interfaces;
-using GM.DAL.Domain;
+using GM.DAL.Domin;
 using GM.DAL.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using System;

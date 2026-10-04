@@ -1,5 +1,5 @@
 ﻿using GM.BLL.Interfaces;
-using GM.DAL.Domain;
+using GM.DAL.Domin;
 using GM.DAL.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -29,7 +29,7 @@ namespace GM.BLL.Services
                 Email = careteplayer.Email,
                 DateJoin = careteplayer.DateJoin,
                 Type = careteplayer.Type,
-                Active = careteplayer.Active,
+                Active = 1,
                 CreateBy = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
             };
 

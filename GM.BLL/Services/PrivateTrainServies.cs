@@ -1,6 +1,6 @@
 ﻿using GM.BLL.DTOs.TrainersDto;
 using GM.BLL.Interfaces;
-using GM.DAL.Domain;
+using GM.DAL.Domin;
 using GM.DAL.Interfaces;
 using System;
 using System.Collections.Generic;

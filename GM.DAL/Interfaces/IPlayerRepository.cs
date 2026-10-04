@@ -1,4 +1,4 @@
-﻿using GM.DAL.Domain;
+﻿using GM.DAL.Domin;
 using System;
 using System.Collections.Generic;
 using System.Linq;
