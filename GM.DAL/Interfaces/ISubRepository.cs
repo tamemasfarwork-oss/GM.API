@@ -22,6 +22,8 @@ namespace GM.DAL.Interfaces
         Task<List<MonthRevenue>> GetRevenueByMonthAsync(DateOnly from);
         Task<List<TResult>> SubscriptionsEx<TResult>(
    Expression<Func<Sub, TResult>> selector);
+
+        Task<Sub> GetSubbyid(int subid);
     }
    
 }

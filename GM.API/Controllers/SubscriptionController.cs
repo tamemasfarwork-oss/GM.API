@@ -4,6 +4,7 @@ using GM.BLL.DTOs.SubDtos;
 using GM.BLL.DTOs.UserDto;
 using GM.BLL.Interfaces;
 using GM.DAL.Domin;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 namespace GM.API.Controllers
 {
@@ -77,6 +78,14 @@ namespace GM.API.Controllers
         public async Task<ActionResult> SubEX()
         {
             var result = await _subServies.SubscriptionsExServies();
+            return Ok(result);
+        }
+
+        [HttpPost("renewsub")]
+       
+        public async Task<ActionResult> renewsub(RefrechSub refrechSub)
+        {
+            var result = await _subServies.RefrechSubServies(refrechSub);
             return Ok(result);
         }
 

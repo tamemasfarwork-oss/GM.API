@@ -79,6 +79,7 @@ namespace GM.DAL.Repositories
             return result;
         }
 
+
         public async Task<decimal> Revenues()
         {
 
@@ -115,5 +116,12 @@ namespace GM.DAL.Repositories
             return result;
 
         }
+
+        public async Task<Sub> GetSubbyid(int subid)
+        {
+            return await _context.Subs.FirstOrDefaultAsync(s => s.SunId == subid);
+        }
+
+
     }
 }

@@ -21,6 +21,8 @@ namespace GM.BLL.Interfaces
         public Task<List<MonthRevenueDto>> GetRevenueLast6MonthsServies();
        Task<List<SubEXDto>> SubscriptionsExServies();
 
+        Task<bool> RefrechSubServies(RefrechSub refrechSub);
+
 
     }
 }

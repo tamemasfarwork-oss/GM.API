@@ -6,6 +6,7 @@ using GM.DAL.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -89,6 +90,8 @@ namespace GM.BLL.Services
 
         public async Task<decimal> RevenuesServies()
         {
+
+
             return await _subRepository.Revenues();
         }
 
@@ -136,6 +139,49 @@ namespace GM.BLL.Services
                 nameplayer = s.Player.FirstName + ' ' + s.Player.LastName
             });
             return result;
+        }
+
+        public async Task<bool> RefrechSubServies(RefrechSub refrechSub)
+        {
+            var old = await _subRepository.GetSubbyid(refrechSub.OldSubId);
+            if (old == null)
+                throw new Exception("Old subscription not found.");
+
+            if (old.Status == "Expired")
+                throw new Exception("This subscription was already renewed.");   // يمنع التجديد المزدوج
+
+            var typesub = await _typesub.FindeAsync(refrechSub.TypeSubId);
+            if (typesub == null)
+                throw new Exception("Subscription type not found.");
+
+            var today = DateOnly.FromDateTime(DateTime.Today);
+
+            // DateOnly عادي: إما ما أرسله العميل، أو اليوم التالي لنهاية القديم (إن ما زال ساري)، أو اليوم
+            DateOnly start = refrechSub.StartDate
+                             ?? (old.DateEnd >= today ? old.DateEnd.AddDays(1) : today);
+
+            var newSub = new Sub
+            {
+                PlayerId = old.PlayerId,
+                TypeSubId = typesub.TypeSubId,
+                DateSub = start,
+                PaymentMethod = refrechSub.paymentmethod,
+                CreateBy=refrechSub.createdby,
+                Price = typesub.Price,
+                DateEnd = start.AddMonths(typesub.DurationMonths),
+                Status = "Active",
+                BranchesId= refrechSub.BranchesId ?? old.BranchesId,
+                   Active=1,
+                   
+
+                // ClubId يُختم تلقائياً من التوكن
+            };
+
+            old.Status = "Expired";  
+            old.Active=0;
+            // متتبَّع، فيُحفظ مع الإضافة في نفس SaveChanges
+
+            return await _subRepository.AddSub(newSub);
         }
     }
 }
