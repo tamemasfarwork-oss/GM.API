@@ -1,5 +1,6 @@
 ﻿using GM.BLL.DTOs.BranchDto;
 using GM.BLL.Interfaces;
+using GM.DAL.Domin;
 using GM.DAL.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -17,7 +18,19 @@ namespace GM.BLL.Services
                 _branchRepository = branchRepository;
         }
 
-    public async    Task<List<BranchDto>> GetBranches()
+        public async Task<bool> AddBranch(branchadddto branch)
+        {
+            var result = await _branchRepository.AddBranch(new Branch
+            {
+                BranchAddres = branch.BranchAddres,
+                BranchName = branch.BranchName,
+                BranchManger = branch.BranchManger,
+            });
+
+            return result;
+        }
+
+        public async    Task<List<BranchDto>> GetBranches()
         {
             var Branches =  await _branchRepository.GetBrnaches();
 

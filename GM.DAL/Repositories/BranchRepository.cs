@@ -17,7 +17,15 @@ namespace GM.DAL.Repositories
         {
             _context = context;
         }
-     public   async Task<List<Branch>> GetBrnaches()
+
+        public async Task<bool> AddBranch(Branch branch)
+        {
+            var result =  await _context.Branches.AddAsync(branch);
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
+        public   async Task<List<Branch>> GetBrnaches()
         {
             
             var  branches = await _context

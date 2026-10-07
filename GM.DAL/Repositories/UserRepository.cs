@@ -28,6 +28,7 @@ namespace GM.DAL.Repositories
         }
         public Task<User?> GetByEmailAsync(string email) =>
       _context.Users.IgnoreQueryFilters()
+            .Include(u => u.Club)
                .FirstOrDefaultAsync(u => u.Email == email);
 
         public Task<bool> EmailExistsAsync(string email) =>

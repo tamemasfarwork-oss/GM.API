@@ -10,5 +10,6 @@ namespace GM.DAL.Interfaces
     public interface IBranchRepository
     {
         public Task<List<Branch>> GetBrnaches();
+        Task<bool> AddBranch(Branch branch);
     }
 }

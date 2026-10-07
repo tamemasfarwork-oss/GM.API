@@ -10,5 +10,6 @@ namespace GM.BLL.Interfaces
     public interface IBranchServies
     {
         public Task<List<BranchDto>> GetBranches();
+        Task<bool> AddBranch(branchadddto branch);
     }
 }

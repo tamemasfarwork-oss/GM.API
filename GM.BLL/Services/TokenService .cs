@@ -25,7 +25,9 @@ namespace GM.BLL.Services
             new(JwtRegisteredClaimNames.Sub, user.UserId.ToString()),
             new(JwtRegisteredClaimNames.Email, user.Email),
             new("full_name", $"{user.FirstName} {user.LastName}"),
-             new("club_id", user.ClubId?.ToString() ?? "")
+             new("club_id", user.ClubId?.ToString() ?? ""),
+             new("club_name", user.Club?.Name ?? ""),
+
         };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwt.Key));

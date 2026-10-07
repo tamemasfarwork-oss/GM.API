@@ -1,4 +1,5 @@
-﻿using GM.BLL.Interfaces;
+﻿using GM.BLL.DTOs.BranchDto;
+using GM.BLL.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GM.API.Controllers
@@ -27,5 +28,19 @@ namespace GM.API.Controllers
             else
                 return BadRequest();
         }
+        [HttpPost("addbranch")]
+        public async Task<IActionResult> addbranch([FromBody] branchadddto branchadddto)
+        {
+            var result = await _branchServies.AddBranch(branchadddto);
+
+            if (result)
+            {
+                return Ok(result);
+            }
+            else
+                return BadRequest();
+        }
+
+
     }
 }
