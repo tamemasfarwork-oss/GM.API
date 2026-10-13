@@ -1,6 +1,7 @@
 ﻿using GM.BLL.DTOs.Authdto;
 using GM.BLL.Interfaces;
 using GM.DAL.Interfaces;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,11 +14,13 @@ namespace GM.BLL.Services
     {
         private readonly IUserRepository _users;
         private readonly ITokenService _tokens;
+        private readonly ILogger<AuthService> _logger;          // جديد
 
-        public AuthService(IUserRepository users, ITokenService tokens)
+        public AuthService(IUserRepository users, ITokenService tokens, ILogger<AuthService> logger)
         {
             _users = users;
             _tokens = tokens;
+            _logger = logger;
         }
 
         public async Task<LoginResponseDto?> LoginAsync(LoginRequestDto dto)
@@ -27,8 +30,12 @@ namespace GM.BLL.Services
 
             // نفس النتيجة (null) سواء البريد خطأ أو كلمة المرور خطأ أو الحساب غير مفعّل
             if (user is null || user.IsActive != 1 || !PasswordMatches(dto.Password, user.Password))
+            {
+                _logger.LogWarning("Invalid credentials for email: {Email}", dto.Email);
                 return null;
+            }
             if (user.ClubId is null)
+
                 return null;
             var (token, expires) = _tokens.Create(user);
 

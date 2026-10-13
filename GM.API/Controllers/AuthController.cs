@@ -2,12 +2,14 @@ using GM.BLL.DTOs.Authdto;
 using GM.BLL.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 
 [ApiController]
 [Route("[controller]")]
 [AllowAnonymous]
 public class AuthController : ControllerBase
 {
+    
     private readonly IAuthService _auth;
     private readonly IUserService _service;
 
@@ -19,6 +21,7 @@ public class AuthController : ControllerBase
 
     [AllowAnonymous]
     [HttpPost("Login")]
+    [EnableRateLimiting("login")]
     public async Task<ActionResult<LoginResponseDto>> Login(LoginRequestDto dto)
     {
         var result = await _auth.LoginAsync(dto);

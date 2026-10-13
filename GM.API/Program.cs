@@ -10,10 +10,23 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Serilog;
+using Serilog;
 using System.Text;
+using System.Threading.RateLimiting;
+
+Log.Logger = new LoggerConfiguration()
+    .MinimumLevel.Information()
+    .MinimumLevel.Override("Microsoft", Serilog.Events.LogEventLevel.Warning)  // لا تكتب ضجيج إطار العمل
+    .WriteTo.Console()
+    .WriteTo.File(
+        "logs/log-.txt",
+        rollingInterval: RollingInterval.Day,   // ملف جديد كل يوم
+        retainedFileCountLimit: 30)             // احتفظ بآخر 30 يوم بس
+    .CreateLogger();
 
 var builder = WebApplication.CreateBuilder(args);
-
+builder.Host.UseSerilog();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
@@ -56,6 +69,56 @@ builder.Services.AddAuthorization(options =>
         .RequireAuthenticatedUser()
         .Build();
 });
+
+//----------------------------------------------------------------------------------------------------
+
+builder.Services.AddRateLimiter(options =>
+{
+// الكود اللي بيرجع لما ينرفض الطلب: 429 = طلبات كثيرة
+options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+
+// ① الحد العام: كل مستخدم 100 طلب بآخر دقيقة
+options.GlobalLimiter = PartitionedRateLimiter.Create<HttpContext, string>(ctx =>
+    RateLimitPartition.GetSlidingWindowLimiter(
+        partitionKey: ctx.User.FindFirst("sub")?.Value                 // المستخدم المسجّل
+                      ?? ctx.Connection.RemoteIpAddress?.ToString()     // أو الـ IP إذا مو مسجّل
+                      ?? "unknown",
+        factory: _ => new SlidingWindowRateLimiterOptions
+        {
+            PermitLimit = 100,                     // كم طلب مسموح
+            Window = TimeSpan.FromMinutes(1),      // خلال كم وقت
+            SegmentsPerWindow = 6,                 // الدقيقة مقسومة 6 أقسام (كل 10 ثواني)
+            QueueLimit = 0                         // الزايد بينرفض فوراً، ما بيستنى بالدور
+        }));
+
+
+    options.AddPolicy("login", ctx =>
+       RateLimitPartition.GetSlidingWindowLimiter(
+           partitionKey: ctx.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+           factory: _ => new SlidingWindowRateLimiterOptions
+           {
+               PermitLimit = 5,
+               Window = TimeSpan.FromMinutes(1),
+               SegmentsPerWindow = 6,
+               QueueLimit = 0
+           }));
+
+    // لما ينرفض طلب: سجّله باللوغ ورجّع رسالة واضحة
+    options.OnRejected = async (context, ct) =>
+    {
+        var logger = context.HttpContext.RequestServices
+            .GetRequiredService<ILoggerFactory>().CreateLogger("RateLimit");
+
+        logger.LogWarning("تجاوز حد الطلبات {Path} من {Ip}",
+            context.HttpContext.Request.Path,
+            context.HttpContext.Connection.RemoteIpAddress);
+
+        await context.HttpContext.Response.WriteAsJsonAsync(
+            new { message = "طلبات كثيرة، انتظر قليلاً وحاول مرة أخرى" }, ct);
+    };
+});
+
+//----------------------------------------------------------------------------------------------------
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<ITenantProvider, TenantProvider>();
 // الخدمات
@@ -120,7 +183,7 @@ builder.Services.AddCors(options =>
 });
 
 var app = builder.Build();
-
+Log.Information("البرنامج اشتغل");
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -130,6 +193,10 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseCors("AllowAngularApp");
 app.UseAuthentication();
+app.UseRateLimiter();          // ← الجديد
+
+app.UseMiddleware<GM.API.Middleware.ErrorLoggingMiddleware>();   // ← الجديد
+
 app.UseAuthorization();
 app.MapControllers();
 
