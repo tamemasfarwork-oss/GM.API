@@ -1,4 +1,5 @@
-﻿using GM.BLL.DTOs.PlayerDto;
+﻿using GM.BLL.DTOs;
+using GM.BLL.DTOs.PlayerDto;
 using GM.BLL.Interfaces;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
@@ -54,7 +55,13 @@ namespace GM.API.Controllers
             var result = await _PlayerService.Lookup(searchTerm);
             return Ok(result);
         }
-
+        [HttpGet("Search")]
+        public async Task<ActionResult<PagedResult<PlayerListDto>>> Search(
+      [FromQuery] PlayerSearchFilter filter)
+        {
+            var result = await _PlayerService.Search(filter);
+            return Ok(result);
+        }
 
         [HttpPut("DisActivePlayer")]
         public async Task<IActionResult> Delete(int id) {

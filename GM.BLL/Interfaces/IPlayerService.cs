@@ -1,4 +1,5 @@
-﻿using GM.BLL.DTOs.PlayerDto;
+﻿using GM.BLL.DTOs;
+using GM.BLL.DTOs.PlayerDto;
 using GM.DAL.Domin;
 using System;
 using System.Collections.Generic;
@@ -17,5 +18,6 @@ namespace GM.BLL.Interfaces
         Task<Player> FindePlayer(int playid);
         Task<List<PlayerLookupDto>> Lookup(string? searchTerm);
         Task<int> CountPlayersServies();
+        Task<PagedResult<PlayerListDto>> Search(PlayerSearchFilter f);
     }
 }

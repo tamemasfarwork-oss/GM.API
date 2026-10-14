@@ -1,4 +1,5 @@
 ﻿using GM.DAL.Domin;
+using GM.DAL.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,8 +23,11 @@ namespace GM.DAL.Interfaces
             Expression<Func<Player, TResult>> selector);
 
         Task<int> CountPlayers();
-            
-            }
+
+        Task<(List<TResult> Items, int TotalCount)> Search<TResult>(
+    PlayerSearchCriteria c, Expression<Func<Player, TResult>> selector);
+
+    }
            
 
 }

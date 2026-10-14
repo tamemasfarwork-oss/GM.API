@@ -11,6 +11,25 @@ using System.Threading.Tasks;
 
 namespace GM.DAL.Repositories
 {
+    public class PlayerSearchCriteria
+    {
+        public string? Name { get; set; }          // يبحث بالاسم الكامل
+        public string? Type { get; set; }          // لو عندك Enum اجعله PlayerType?
+        public string? Email { get; set; }
+
+        public int Skip { get; set; }
+        public int Take { get; set; } = 10;
+    }
+
+    // what its ex
+    public static class QueryExtensions
+    {
+        public static IQueryable<T> WhereIf<T>(
+            this IQueryable<T> query,
+            bool condition,
+            Expression<Func<T, bool>> predicate)
+            => condition ? query.Where(predicate) : query;
+    }
     public class PlayerRepository : IPlayerRepository
     {
         private readonly AppDbContext _context;
@@ -87,8 +106,39 @@ namespace GM.DAL.Repositories
                 .ToListAsync();
         }
 
+        // why ddi we used  the player serch criteria 
+        // why did we use experession func instead of func it self 
+        public async Task<(List<TResult> Items, int TotalCount)> Search<TResult>(
+      PlayerSearchCriteria c,
+      Expression<Func<Player, TResult>> selector)
+        {
+            var query = _context.Players.AsNoTracking()
+              ;
+
+            query = query.WhereIf(!string.IsNullOrEmpty(c.Name),
+                         p => (p.FirstName + " " + p.LastName).Contains(c.Name!))
+                .WhereIf(!string.IsNullOrEmpty(c.Type),
+                         p => p.Type == c.Type)
+                .WhereIf(!string.IsNullOrEmpty(c.Email),
+                         p => p.Email.Contains(c.Email!));
+
+            var total = await query.CountAsync();
+
+            var items = await query
+                .OrderBy(p => p.FirstName)
+                .ThenBy(p => p.LastName)
+                .ThenBy(p => p.PlayerId)
+                .Skip(c.Skip)
+                .Take(c.Take)
+                .Select(selector)
+                .ToListAsync();
+
+            return (items, total);
+        }
+
         public async Task<int> CountPlayers()
         {
+         
             var countplayers = await _context.Players.AsNoTracking()
                 .CountAsync();
             return countplayers;
