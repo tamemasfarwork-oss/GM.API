@@ -1,6 +1,7 @@
 ﻿using GM.DAL.Data;
 using GM.DAL.Domin;
 using GM.DAL.Interfaces;
+using GM.DAL.NewFolder;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -19,17 +20,14 @@ namespace GM.DAL.Repositories
 
         public int Skip { get; set; }
         public int Take { get; set; } = 10;
-    }
+    };
 
-    // what its ex
-    public static class QueryExtensions
-    {
-        public static IQueryable<T> WhereIf<T>(
-            this IQueryable<T> query,
-            bool condition,
-            Expression<Func<T, bool>> predicate)
-            => condition ? query.Where(predicate) : query;
-    }
+    // what its extension methods
+    
+
+      
+       
+
     public class PlayerRepository : IPlayerRepository
     {
         private readonly AppDbContext _context;
@@ -37,6 +35,7 @@ namespace GM.DAL.Repositories
         {
             _context = context;
         }
+       
 
         public async Task<int> CreateAsync(Player createPlayer)
         {
@@ -120,14 +119,15 @@ namespace GM.DAL.Repositories
                 .WhereIf(!string.IsNullOrEmpty(c.Type),
                          p => p.Type == c.Type)
                 .WhereIf(!string.IsNullOrEmpty(c.Email),
-                         p => p.Email.Contains(c.Email!));
-
+                         p => p.Email.Contains(c.Email!))
+                .MyownOrderBY(true,s=>s.DateJoin);
+         
             var total = await query.CountAsync();
 
             var items = await query
-                .OrderBy(p => p.FirstName)
-                .ThenBy(p => p.LastName)
-                .ThenBy(p => p.PlayerId)
+                
+                
+               
                 .Skip(c.Skip)
                 .Take(c.Take)
                 .Select(selector)

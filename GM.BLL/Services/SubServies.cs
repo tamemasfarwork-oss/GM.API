@@ -4,6 +4,7 @@ using GM.DAL.Domin;
 using GM.DAL.Interfaces;
 using GM.DAL.Repositories;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
@@ -181,7 +182,13 @@ namespace GM.BLL.Services
             old.Active=0;
             // متتبَّع، فيُحفظ مع الإضافة في نفس SaveChanges
 
-            return await _subRepository.AddSub(newSub);
+            var ok = await _subRepository.AddSub(newSub);
+
+            
+            return ok;
         }
+
+     
     }
-}
+    }
+
