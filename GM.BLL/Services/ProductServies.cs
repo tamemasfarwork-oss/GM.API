@@ -49,5 +49,38 @@ namespace GM.BLL.Services
                 throw;
             }
         }
+
+        public async Task<List<GetItemsDto>> GetItemsServies(int pagenumber,int pagesize)
+        {
+
+
+            return await _repo.GetProducts(pagenumber, pagesize, p => new GetItemsDto
+            {
+                ProductId = p.ProductId,
+                Price = p.Price,
+                CostPrice = p.CostPrice,
+                describetion = p.describetion,
+                ImageUrl = p.ImageUrl,
+                ProductName = p.ProductName,
+                Quantity = p.Quantity
+            });
+        }
+
+        public async Task<GetItemsDto> GetProductByIDServies(int productsid)
+        {
+
+            var result = await _repo.GetProductsByidRepo(productsid);
+
+            return new GetItemsDto
+            {
+                Price = result.Price,
+                CostPrice = result.CostPrice,
+                describetion = result.describetion,
+                ImageUrl = result.ImageUrl,
+                ProductId = result.ProductId,
+                ProductName = result.ProductName,
+                Quantity = result.Quantity
+            };
+        }
     }
 }

@@ -56,7 +56,8 @@ namespace GM.DAL.Repositories
                .ToListAsync();
         }
 
-        public  async Task<List<TResult>> GetSubscriptions<TResult>(Expression<Func<Sub, TResult>> selector, int pageNumber, int pagesize)
+        public  async Task<List<TResult>> GetSubscriptions<TResult>(Expression<Func<Sub, TResult>> selector, 
+            int pageNumber, int pagesize)
         {
             var bagesub =  await  _context.Subs
                 .AsNoTracking()

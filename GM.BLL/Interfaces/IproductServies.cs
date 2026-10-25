@@ -9,7 +9,9 @@ namespace GM.BLL.Interfaces
 {
    public interface  IproductServies
     {
+        Task<List<GetItemsDto>> GetItemsServies(int pagenumber, int pagesize);
+        Task<int> AddProductServies(AddProductDto addProductDto);
 
-        Task<int> AddProductServies(AddProductDto addProductDto); 
+        Task<GetItemsDto> GetProductByIDServies(int productsid);
     }
 }
