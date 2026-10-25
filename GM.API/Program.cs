@@ -147,6 +147,11 @@ builder.Services.AddScoped<IPrivateTrainServies, PrivateTrainServies>();
 builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("Jwt"));
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IproductServies, ProductServies>();
+builder.Services.AddScoped<IPrductRepo, ProductRepo>();
+
+builder.Services.AddScoped<IFileService, FileService>();
+
 
 var jwt = builder.Configuration.GetSection("Jwt").Get<JwtSettings>()!;
 if (string.IsNullOrWhiteSpace(jwt.Key) || jwt.Key.Length < 32)
@@ -176,28 +181,34 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAngularApp", policy =>
     {
-        policy.WithOrigins("http://localhost:4200")
+        policy.WithOrigins("https://gm-app-test1.netlify.app", "http://localhost:4200")
               .AllowAnyMethod()
               .AllowAnyHeader();
     });
 });
 
+
+
+
+
 var app = builder.Build();
-Log.Information("البرنامج اشتغل");
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
 
 app.UseHttpsRedirection();
+app.UseStaticFiles();
+
+app.UseSwagger();
+app.UseSwaggerUI();
+
+app.UseRouting();
 app.UseCors("AllowAngularApp");
+
 app.UseAuthentication();
-app.UseRateLimiter();          // ← الجديد
-
-app.UseMiddleware<GM.API.Middleware.ErrorLoggingMiddleware>();   // ← الجديد
-
+app.UseRateLimiter();
 app.UseAuthorization();
+
+app.UseMiddleware<GM.API.Middleware.ErrorLoggingMiddleware>();
+
 app.MapControllers();
+app.MapFallbackToFile("index.html");
 
 app.Run();

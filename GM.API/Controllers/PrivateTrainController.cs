@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace GM.API.Controllers
 {
+    [ApiController]
+    [Route("[controller]")]
     public class PrivateTrainController : Controller
     {
         private readonly IPrivateTrainServies _privateTrainServies;
@@ -11,10 +13,7 @@ namespace GM.API.Controllers
         {
             _privateTrainServies = privateTrainServies;
         }
-        public IActionResult Index()
-        {
-            return View();
-        }
+      
         [HttpPost("create")]
         public async Task<IActionResult>AddPrivate([FromBody]addDto addDto)
         {

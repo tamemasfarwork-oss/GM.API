@@ -243,8 +243,11 @@ public partial class AppDbContext : DbContext
                 .HasColumnName("price");
             entity.Property(e => e.ProductName)
                 .HasMaxLength(100)
-                .IsUnicode(false)
+               
                 .HasColumnName("product_name_");
+
+            entity.Property(e => e.ImageUrl).HasMaxLength(500).HasColumnName("ImageUrl");
+            entity.Property(e => e.describetion).HasMaxLength(250).HasColumnName("describetion");
 
             entity.HasOne(d => d.Club).WithMany(p => p.Products)
                 .HasForeignKey(d => d.ClubId)

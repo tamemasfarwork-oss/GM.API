@@ -14,6 +14,9 @@ public partial class Product
     public int Quantity { get; set; }
 
     public decimal CostPrice { get; set; }
+    public string? ImageUrl { get; set; }
+    public string? describetion { get; set; }
+
 
     public int? ClubId { get; set; }
 

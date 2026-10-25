@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace GM.API.Controllers
 {
+    [ApiController]
+    [Route("[controller]")]
     public class BranchesController : Controller
     {
 
@@ -12,10 +14,7 @@ namespace GM.API.Controllers
         {
             _branchServies = branchServies;
         }
-        public IActionResult Index()
-        {
-            return View();
-        }
+       
         [HttpGet("GetAllBranches")]
         public async Task<IActionResult> GetAllBranches()
         {
