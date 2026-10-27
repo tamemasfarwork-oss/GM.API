@@ -82,5 +82,45 @@ namespace GM.BLL.Services
                 Quantity = result.Quantity
             };
         }
+
+        public async Task<bool> UpdateServies(UpdateDto itemsDto)
+        {
+            var product = await _repo.GetProductsByidRepo(itemsDto.ProductId);
+            if (product == null)
+                return false;
+
+            string? oldImageUrl = product.ImageUrl;
+            string? newImageUrl = null;
+
+            if (itemsDto.ImageUrl != null)
+            {
+                newImageUrl = await _fileService.SaveImageAsync(itemsDto.ImageUrl, "products");
+                product.ImageUrl = newImageUrl;
+            }
+
+            product.ProductName = itemsDto.ProductName;
+            product.Price = itemsDto.Price;
+            product.CostPrice = itemsDto.CostPrice;
+            product.Quantity = itemsDto.Quantity;
+            product.describetion = itemsDto.describetion;
+
+            bool result;
+            try
+            {
+                result = await _repo.UpdateRepo(product);
+            }
+            catch
+            {
+                _fileService.DeleteFile(newImageUrl);
+                throw;
+            }
+
+            if (result && newImageUrl != null)
+                _fileService.DeleteFile(oldImageUrl);
+            else if (!result)
+                _fileService.DeleteFile(newImageUrl);
+
+            return result;
+        }
     }
 }

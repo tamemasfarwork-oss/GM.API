@@ -152,6 +152,9 @@ builder.Services.AddScoped<IPrductRepo, ProductRepo>();
 
 builder.Services.AddScoped<IFileService, FileService>();
 
+builder.Services.AddScoped<ISaleRepository, SaleRepository>();
+builder.Services.AddScoped<ISaleServies, SaleServies>();
+
 
 var jwt = builder.Configuration.GetSection("Jwt").Get<JwtSettings>()!;
 if (string.IsNullOrWhiteSpace(jwt.Key) || jwt.Key.Length < 32)

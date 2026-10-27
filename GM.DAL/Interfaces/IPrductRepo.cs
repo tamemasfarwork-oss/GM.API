@@ -16,5 +16,6 @@ namespace GM.DAL.Interfaces
 
         Task<Product> GetProductsByidRepo(int productid
            );
+        Task<bool> UpdateRepo(Product product);
     }
 }

@@ -19,8 +19,8 @@ namespace GM.API.Controllers
             return id > 0 ? Ok(id) : BadRequest();
         }
 
-        [HttpPost("Get")]
-        public async Task<IActionResult> GetProducts(int pagenumber,int pagesize)
+        [HttpGet("Get")]
+        public async Task<IActionResult> GetProducts(int pagenumber, int pagesize)
         {
             var result = await _iproductServies.GetItemsServies(pagenumber,pagesize);
             return result !=null ? Ok(result) : BadRequest();
@@ -32,5 +32,13 @@ namespace GM.API.Controllers
             var result = await _iproductServies.GetProductByIDServies(productid);
             return result != null ? Ok(result) : BadRequest();
         }
+
+        [HttpPut("Update")]
+        public async Task<IActionResult> UpdateProduct([FromForm] UpdateDto Upproduct)
+        {
+            var result = await _iproductServies.UpdateServies(Upproduct);
+            return result != false ? Ok(result) : BadRequest();
+        }
     }
+
 }

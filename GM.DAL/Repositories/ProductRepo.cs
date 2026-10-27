@@ -45,5 +45,12 @@ namespace GM.DAL.Repositories
         {
             return await _context.Products.FirstOrDefaultAsync(p => p.ProductId == productid);
         }
+
+        public async Task<bool> UpdateRepo(Product product)
+        {
+
+            var result =  await  _context.SaveChangesAsync();
+            return result > 0;
+        }
     }
 }

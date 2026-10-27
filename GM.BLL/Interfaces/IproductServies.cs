@@ -13,5 +13,7 @@ namespace GM.BLL.Interfaces
         Task<int> AddProductServies(AddProductDto addProductDto);
 
         Task<GetItemsDto> GetProductByIDServies(int productsid);
+
+        Task<bool> UpdateServies(UpdateDto itemsDto);
     }
 }
